@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offer Radar</title>
+<meta name="description" content="A public log of recruiter pitches I've received and politely declined — cadence, fields, and advertised salary ranges.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-mute:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --accent:#2a78d6; --accent-soft:#cde2fb;
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300; --c7:#4a3aa7; --c8:#e34948;
+  --good:#006300; --chip-bg:rgba(11,11,11,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink-2:#c3c2b7; --ink-mute:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --accent:#3987e5; --accent-soft:#184f95;
+    --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
+    --good:#0ca30c; --chip-bg:rgba(255,255,255,.05);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-mute:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --accent:#3987e5; --accent-soft:#184f95;
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
+  --good:#0ca30c; --chip-bg:rgba(255,255,255,.05);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.55 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1060px; margin:0 auto; padding:40px 24px 72px}
+h1,h2{text-wrap:balance; margin:0}
+.mono{font-family:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace}
+.eyebrow{
+  font-family:"IBM Plex Mono", monospace; font-size:11px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 10px;
+}
+header{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:28px}
+header h1{font-size:clamp(30px,5vw,44px); font-weight:700; letter-spacing:-.02em; line-height:1.05}
+header .sub{color:var(--ink-2); margin:6px 0 0; max-width:52ch}
+header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-mute); white-space:nowrap}
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
+.tile{background:var(--surface); padding:16px 18px 14px}
+.tile .v{font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1}
+.tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.05em; text-transform:uppercase}
+.tile .note{font-size:12px; color:var(--ink-2); margin-top:2px}
+section{margin-bottom:46px}
+section>h2{font-size:19px; font-weight:600; margin-bottom:2px}
+section>.lead{color:var(--ink-2); font-size:13.5px; margin:2px 0 16px; max-width:70ch}
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:28px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 20px 14px}
+.panel h3{margin:0 0 4px; font-size:14px; font-weight:600}
+.panel .pl{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin:0 0 14px}
+svg text{font-family:"IBM Plex Mono",monospace}
+svg .tick{font-size:10.5px; fill:var(--ink-mute); font-variant-numeric:tabular-nums}
+svg .tick-strong{fill:var(--ink-2)}
+svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
+svg .hair{stroke:var(--grid); stroke-width:1}
+svg .base{stroke:var(--axis); stroke-width:1}
+figure{margin:0}
+figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
+.frow{display:grid; grid-template-columns:172px 1fr 30px; gap:10px; align-items:center; margin-bottom:9px}
+.frow:last-child{margin-bottom:0}
+.frow .fname{font-size:12.5px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.frow .fbar{height:18px; border-radius:0 4px 4px 0; min-width:3px}
+.frow .fcount{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
+@media (max-width:520px){
+  .wrap{padding:28px 16px 56px}
+  .tile{padding:13px 14px 12px}
+  .tile .v{font-size:25px}
+  .frow{grid-template-columns:1fr 30px; gap:4px 10px}
+  .frow .fname{grid-column:1 / -1; text-align:left}
+  .frow .fbar{grid-column:1}
+  .frow .fcount{grid-column:2; grid-row:2}
+}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
+.chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px}
+.chip .dot{width:8px; height:8px; border-radius:50%}
+.controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+.controls input[type=search]{
+  font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface);
+  border:1px solid var(--border); border-radius:8px; padding:8px 12px; width:min(340px,100%);
+}
+.controls input[type=search]::placeholder{color:var(--ink-mute)}
+.controls input[type=search]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls select{font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
+.controls select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.tblwrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px}
+table{border-collapse:collapse; width:100%; min-width:720px; background:var(--surface); font-size:13px}
+th{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-mute); font-weight:600; text-align:left; padding:10px 14px; border-bottom:1px solid var(--axis)}
+td{padding:10px 14px; border-bottom:1px solid var(--grid); vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--ink-2)}
+td .co{font-weight:600; color:var(--ink)}
+td .off{color:var(--ink-2); max-width:44ch; display:block}
+.fd{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; color:var(--ink-2)}
+.fd i{width:9px; height:9px; border-radius:3px; flex:none}
+.ans{color:var(--good); font-family:"IBM Plex Mono",monospace; font-size:12px; white-space:nowrap}
+.foot{color:var(--ink-mute); font-size:12.5px; border-top:1px solid var(--grid); padding-top:16px; margin-top:52px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+#tip{
+  position:fixed; z-index:9; pointer-events:none; opacity:0; transition:opacity .12s;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  padding:9px 12px; font-size:12px; color:var(--ink-2); max-width:260px;
+  box-shadow:0 4px 14px rgba(0,0,0,.12); font-family:"IBM Plex Mono",monospace;
+}
+#tip b{color:var(--ink); font-weight:600}
+@media (prefers-reduced-motion:no-preference){
+  .frow .fbar, .bar rect{transition:opacity .15s}
+  .bar:hover rect, .frow:hover .fbar{opacity:.82}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <p class="eyebrow">Recruiter outreach log</p>
+    <h1>Offer Radar</h1>
+    <p class="sub">Every pitch that landed in my inbox, logged — and politely declined. All 21 answered, zero moves made. Recruiters anonymized; the offers speak for themselves.</p>
+  </div>
+  <div class="stamp">updated 2026-09-05</div>
+</header>
+
+<div class="tiles" id="tiles"></div>
+
+<section>
+  <h2>Cadence</h2>
+  <p class="lead">First contact per offer, binned by week. The market found me about once every two days all August — and then doubled down.</p>
+  <figure class="panel">
+    <h3>Offers per week</h3>
+    <p class="pl">first contact date · hover a bar for who pinged</p>
+    <div id="cadence"></div>
+    <figcaption id="cadence-note"></figcaption>
+  </figure>
+</section>
+
+<div class="cols">
+  <section>
+    <h2>Fields</h2>
+    <p class="lead">What they think I do all day. Physical-security AI leads — Verkada does follow a person around.</p>
+    <figure class="panel">
+      <h3>By company field</h3>
+      <p class="pl">21 offers across 8 fields</p>
+      <div id="fields"></div>
+    </figure>
+  </section>
+  <section>
+    <h2>Price tags</h2>
+    <p class="lead">Advertised base-salary ranges, where stated. The healthcare AI scale-up thinks I'm worth twice what the audio one does.</p>
+    <figure class="panel">
+      <h3>Advertised base range</h3>
+      <p class="pl">$K / year · min → max · hover a row</p>
+      <div id="comp"></div>
+      <figcaption>8 of 21 offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
+    </figure>
+  </section>
+</div>
+
+<section>
+  <h2>The log</h2>
+  <p class="lead">Full record. Filter by company, field, or channel.</p>
+  <div class="controls">
+    <input type="search" id="q" placeholder="filter… e.g. frontend, agents, gmail" aria-label="Filter offers">
+    <select id="fieldsel" aria-label="Filter by field"></select>
+    <span class="chips" id="chips"></span>
+  </div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr>
+        <th>Received</th><th>Company</th><th>Field</th><th>Channel</th><th>Offer</th><th>Answered</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Adding an offer? Everything is one <span class="mono">DATA</span> array in <span class="mono">index.html</span> — see <span class="mono">AGENTS.md</span> for the workflow.</span>
+  <span class="mono">built 2026-09-05 · IBM Plex · validated palette</span>
+</footer>
+
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+/* ================= DATA — ADD NEW OFFERS HERE =================
+   {d:"YYYY-MM-DD" (first contact), co:company, f:field (see FIELDS keys),
+    ch:"gmail"|"linkedin", off:short offer text,
+    base:[loK, hiK] or null, pings:messages from recruiter (1 = single),
+    ans:"YYYY-MM-DD" I answered}
+   NOTE: recruiters are anonymized on purpose — channel only, no names, no emails.
+================================================================ */
+const FIELDS = {
+  "AI & physical security":  "c1",
+  "Frontend (unnamed clients)": "c2",
+  "AI agents & automation":  "c3",
+  "Creative & generative AI":"c4",
+  "Data & infra":            "c5",
+  "Healthcare AI":           "c6",
+  "Productivity & tools":    "c7",
+  "Staffing (multi-role)":   "c8",
+};
+const DATA = [
+ {d:"2026-07-21", co:"Stealth AI-security co", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1, ans:"2026-07-27"},
+ {d:"2026-07-27", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1, ans:"2026-07-27"},
+ {d:"2026-08-04", co:"Coram AI", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1, ans:"2026-08-05"},
+ {d:"2026-08-05", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1, ans:"2026-08-05"},
+ {d:"2026-08-08", co:"Backflip.AI", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1, ans:"2026-08-10"},
+ {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1, ans:"2026-09-05"},
+ {d:"2026-08-13", co:"DatologyAI", f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2, ans:"2026-09-05"},
+ {d:"2026-08-14", co:"RapidAI", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1, ans:"2026-09-05"},
+ {d:"2026-08-19", co:"Airbyte", f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1, ans:"2026-09-04"},
+ {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3, ans:"2026-09-05"},
+ {d:"2026-08-21", co:"Coframe", f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3, ans:"2026-09-05"},
+ {d:"2026-08-24", co:"Unnamed Series B audio AI", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1, ans:"2026-09-05"},
+ {d:"2026-08-25", co:"Decagon", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2, ans:"2026-09-05"},
+ {d:"2026-08-25", co:"Phylo", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3, ans:"2026-09-05"},
+ {d:"2026-08-26", co:"TechLine Consulting (clients)", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1, ans:"2026-09-04"},
+ {d:"2026-09-01", co:"Poka Labs", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3, ans:"2026-09-05"},
+ {d:"2026-09-01", co:"Coram AI", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2, ans:"2026-09-05"},
+ {d:"2026-09-04", co:"Cylake", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1, ans:"2026-09-05"},
+ {d:"2026-09-04", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1, ans:"2026-09-04"},
+ {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1, ans:"2026-09-04"},
+ {d:"2026-09-04", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1, ans:"2026-09-04"},
+];
+/* =================== end of data — charts below =================== */
+
+const $ = s => document.querySelector(s);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const money = k => "$" + k + "K";
+const dshort = iso => new Date(iso+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const TIP = $("#tip");
+function tip(html, x, y){
+  TIP.innerHTML = html; TIP.style.opacity = 1;
+  const r = TIP.getBoundingClientRect();
+  TIP.style.left = Math.min(x+14, innerWidth - r.width - 10) + "px";
+  TIP.style.top  = Math.max(8, y - r.height - 12) + "px";
+}
+function untip(){ TIP.style.opacity = 0; }
+
+/* ---- stat tiles ---- */
+(function(){
+  const n = DATA.length;
+  const days = (new Date("2026-09-05") - new Date(DATA[0].d)) / 864e5;
+  const per = (days / n).toFixed(1);
+  const cos = new Set(DATA.map(x => x.co)).size;
+  const pings = DATA.reduce((s,x)=> s + (x.pings||1) - 1, 0);
+  const bases = DATA.filter(x=>x.base);
+  const lo = Math.min(...bases.map(x=>x.base[0])), hi = Math.max(...bases.map(x=>x.base[1]));
+  const gmail = DATA.filter(x=>x.ch==="gmail").length;
+  const t = [
+    [n, "offers logged", "Jul 21 → Sep 5 · one every "+per+" days"],
+    [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
+    ["100%", "answered", "every single one — politely"],
+    [money(lo)+"–"+money(hi), "advertised bases", "8 of "+n+" stated a range"],
+    [pings, "follow-up pings", "endured without folding"],
+  ];
+  $("#tiles").innerHTML = t.map(([v,k,note]) =>
+    '<div class="tile"><div class="v mono">'+v+'</div><div class="k">'+k+'</div><div class="note">'+note+'</div></div>').join("");
+})();
+
+/* ---- weekly cadence bar chart ---- */
+(function(){
+  const wk = iso => { const d = new Date(iso+"T12:00"); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.toISOString().slice(0,10); };
+  const bins = new Map();
+  DATA.forEach(x => { const w = wk(x.d); (bins.get(w) || bins.set(w,[]).get(w)).push(x); });
+  const keys = [...bins.keys()].sort();
+  const W = 660, H = 210, padL = 8, padB = 34, top = 30;
+  const max = Math.max(...bins.values().map(a=>a.length));
+  const bw = (W - padL*2) / keys.length;
+  let bars = "", labels = "";
+  keys.forEach((k,i) => {
+    const items = bins.get(k), h = items.length / max * (H - top - padB);
+    const x = padL + i*bw + 4, y = H - padB - h, w = bw - 8;
+    bars += '<g class="bar"><rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+
+            '" rx="4" fill="var(--accent)"/></g>';
+    bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(y-7)+'" text-anchor="middle">'+items.length+'</text>';
+    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+dshort(k)+'</text>';
+  });
+  $("#cadence").innerHTML =
+    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per week">'+
+    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
+  $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
+    const items = bins.get(keys[i]);
+    g.addEventListener("mousemove", e => tip("<b>Week of "+dshort(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
+    g.addEventListener("mouseleave", untip);
+  });
+  $("#cadence-note").textContent = "peak: week of "+dshort(keys[keys.length-1])+" — "+bins.get(keys[keys.length-1]).length+" offers in 7 days";
+})();
+
+/* ---- fields horizontal bars (count-desc) ---- */
+(function(){
+  const counts = {};
+  DATA.forEach(x => counts[x.f] = (counts[x.f]||0)+1);
+  const order = Object.entries(counts).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
+  const max = order[0][1];
+  $("#fields").innerHTML = order.map(([f,c]) =>
+    '<div class="frow"><div class="fname" title="'+f+'">'+f+'</div>'+
+    '<div class="fbar" style="width:'+(c/max*100)+'%;background:var(--'+FIELDS[f]+')" data-f="'+f+'"></div>'+
+    '<div class="fcount">'+c+'</div></div>').join("");
+  $("#fields").querySelectorAll(".fbar").forEach(el => {
+    const f = el.dataset.f;
+    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+DATA.filter(x=>x.f===f).map(x=>x.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
+    el.addEventListener("mouseleave", untip);
+  });
+})();
+
+/* ---- advertised comp dumbbell ---- */
+(function(){
+  const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
+  const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
+  const W = 620, rowH = 34, padL = 8, padR = 96, top = 8;
+  const H = rows.length*rowH + top + 22;
+  const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
+  let marks = "", grid = "";
+  for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50)
+    grid += '<line class="hair" x1="'+xs(v)+'" y1="'+top+'" x2="'+xs(v)+'" y2="'+(H-22)+'"/>'+
+            '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
+  rows.forEach((r,i) => {
+    const y = top + i*rowH + rowH/2;
+    marks += '<g class="drow"><line x1="'+xs(r.base[0])+'" y1="'+y+'" x2="'+xs(r.base[1])+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>'+
+      '<circle cx="'+xs(r.base[0])+'" cy="'+y+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>'+
+      '<circle cx="'+xs(r.base[1])+'" cy="'+y+'" r="4.5" fill="var(--accent)"/>'+
+      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+r.co.replace(/ \(.*\)/,"").slice(0,16)+'</text></g>';
+  });
+  $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
+    grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+0)+'">$K base</text></svg>';
+  $("#comp").querySelectorAll("g.drow").forEach((g,i) => {
+    const r = rows[i];
+    g.addEventListener("mousemove", e => tip("<b>"+r.co+"</b><br>"+money(r.base[0])+" – "+money(r.base[1])+" base · "+r.ch, e.clientX, e.clientY));
+    g.addEventListener("mouseleave", untip);
+  });
+})();
+
+/* ---- the log: table + filter ---- */
+(function(){
+  const tbody = $("#rows"), q = $("#q"), fs = $("#fieldsel");
+  fs.innerHTML = '<option value="">all fields</option>' + Object.keys(FIELDS).map(f=>'<option>'+f+'</option>').join("");
+  $("#chips").innerHTML = ['gmail','linkedin'].map(c => {
+    const n = DATA.filter(x=>x.ch===c).length;
+    const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
+    return '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+' '+n+'</span>';
+  }).join("");
+  function draw(){
+    const term = q.value.trim().toLowerCase(), field = fs.value;
+    const rows = DATA.filter(x =>
+      (!field || x.f===field) &&
+      (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off).toLowerCase().includes(term))
+    ).slice().sort((a,b)=>b.d.localeCompare(a.d));
+    tbody.innerHTML = rows.map(x =>
+      '<tr><td class="num">'+x.d+'</td>'+
+      '<td><span class="co">'+x.co+'</span><span class="off">'+x.off+'</span></td>'+
+      '<td><span class="fd"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span></td>'+
+      '<td class="num">'+x.ch+(x.pings>1?' ·'+x.pings+' pings':'')+'</td>'+
+      '<td class="num">'+(x.base?money(x.base[0])+'–'+money(x.base[1]):'—')+'</td>'+
+      '<td class="ans">answered '+x.ans+'</td></tr>').join("") ||
+      '<tr><td colspan="6" style="color:var(--ink-mute)">nothing matches</td></tr>';
+  }
+  q.addEventListener("input", draw);
+  fs.addEventListener("change", draw);
+  draw();
+})();
+</script>
+</body>
+</html>
