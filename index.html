@@ -52,6 +52,8 @@ h1,h2{text-wrap:balance; margin:0}
 header{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:28px}
 header h1{font-size:clamp(30px,5vw,44px); font-weight:700; letter-spacing:-.02em; line-height:1.05}
 header .sub{color:var(--ink-2); margin:6px 0 0; max-width:52ch}
+header .home{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-mute); text-decoration:none; margin-bottom:14px}
+header .home:hover{color:var(--accent); text-decoration:underline; text-underline-offset:3px}
 header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-mute); white-space:nowrap}
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
 .tile{background:var(--surface); padding:16px 18px 14px}
@@ -151,6 +153,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <header>
   <div>
+    <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
     <p class="sub">Every pitch that landed in my inbox, logged — and politely declined. All 21 answered, zero moves made. Recruiters anonymized; the offers speak for themselves.</p>
@@ -168,6 +171,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <p class="pl">first contact date · hover a bar for who pinged</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
+    <div class="chips" id="lochips" style="margin-top:12px"></div>
   </figure>
 </section>
 
@@ -222,7 +226,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 <script>
 /* ================= DATA — ADD NEW OFFERS HERE =================
    {d:"YYYY-MM-DD" (first contact), co:company, f:field (see FIELDS keys),
-    ch:"gmail"|"linkedin", off:short offer text,
+    ch:"gmail"|"linkedin", loc:location or null, off:short offer text,
     base:[loK, hiK] or null, pings:messages from recruiter (1 = single)}
    NOTE: recruiters are anonymized on purpose — channel only, no names, no emails.
 ================================================================ */
@@ -237,27 +241,27 @@ const FIELDS = {
   "Staffing (multi-role)":   "c8",
 };
 const DATA = [
- {d:"2026-07-21", co:"Stealth AI-security co", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1},
- {d:"2026-07-27", co:"Unnamed client (NPM component library)", f:"Unnamed client", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1},
- {d:"2026-08-04", co:"Coram AI", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1},
- {d:"2026-08-05", co:"Unnamed client (senior frontend)", f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1},
- {d:"2026-08-08", co:"Backflip.AI", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1},
- {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1},
- {d:"2026-08-13", co:"DatologyAI", f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2},
- {d:"2026-08-14", co:"RapidAI", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1},
- {d:"2026-08-19", co:"Airbyte", f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1},
- {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3},
- {d:"2026-08-21", co:"Coframe", f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3},
- {d:"2026-08-24", co:"Unnamed Series B audio AI", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1},
- {d:"2026-08-25", co:"Decagon", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2},
- {d:"2026-08-25", co:"Phylo", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3},
- {d:"2026-08-26", co:"TechLine Consulting (clients)", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1},
- {d:"2026-09-01", co:"Poka Labs", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3},
- {d:"2026-09-01", co:"Coram AI", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2},
- {d:"2026-09-04", co:"Cylake", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", f:"Unnamed client", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed client (frontend UI)", f:"Unnamed client", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1},
+ {d:"2026-07-21", co:"Stealth AI-security co", loc:"client-site travel", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1},
+ {d:"2026-07-27", co:"Unnamed client (NPM component library)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1},
+ {d:"2026-08-04", co:"Coram AI", loc:"Sunnyvale", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1},
+ {d:"2026-08-05", co:"Unnamed client (senior frontend)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1},
+ {d:"2026-08-08", co:"Backflip.AI", loc:"SF", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1},
+ {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", loc:null, f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1},
+ {d:"2026-08-13", co:"DatologyAI", loc:null, f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2},
+ {d:"2026-08-14", co:"RapidAI", loc:"Burlingame", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1},
+ {d:"2026-08-19", co:"Airbyte", loc:null, f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1},
+ {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", loc:null, f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3},
+ {d:"2026-08-21", co:"Coframe", loc:null, f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3},
+ {d:"2026-08-24", co:"Unnamed Series B audio AI", loc:"SF", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1},
+ {d:"2026-08-25", co:"Decagon", loc:"NYC or SF", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2},
+ {d:"2026-08-25", co:"Phylo", loc:"South SF", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3},
+ {d:"2026-08-26", co:"TechLine Consulting (clients)", loc:"SF/Peninsula", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1},
+ {d:"2026-09-01", co:"Poka Labs", loc:"SF", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3},
+ {d:"2026-09-01", co:"Coram AI", loc:"Sunnyvale", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2},
+ {d:"2026-09-04", co:"Cylake", loc:null, f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", loc:"Foster City", f:"Unnamed client", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", loc:null, f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (frontend UI)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1},
 ];
 /* =================== end of data — charts below =================== */
 
@@ -285,12 +289,15 @@ function untip(){ TIP.style.opacity = 0; }
   const lo = Math.min(...bases.map(x=>x.base[0])), hi = Math.max(...bases.map(x=>x.base[1]));
   const gmail = DATA.filter(x=>x.ch==="gmail").length;
   const ai = DATA.filter(x => /AI|artificial intelligence/i.test(x.co+" "+x.f+" "+x.off)).length;
+  const locs2 = DATA.map(x=>x.loc).filter(Boolean);
+  const bay = locs2.filter(l => ["SF","South SF","Sunnyvale","Burlingame","Foster City","SF/Peninsula"].includes(l)).length;
   const t = [
     [n, "offers logged", "Jul 21 → Sep 5 · one every "+per+" days"],
     [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
     [ai+"/"+n, "pitches are about AI", "it's the whole market, apparently"],
     [money(lo)+"–"+money(hi), "advertised bases", bases.length+" of "+n+" stated a range"],
     [pings, "follow-up pings", "endured without folding"],
+    [bay+"/"+n, "are in the SF Bay Area", "the rest are unknown or elsewhere"],
   ];
   $("#tiles").innerHTML = t.map(([v,k,note]) =>
     '<div class="tile"><div class="v mono">'+v+'</div><div class="k">'+k+'</div><div class="note">'+note+'</div></div>').join("");
@@ -323,6 +330,10 @@ function untip(){ TIP.style.opacity = 0; }
     g.addEventListener("mouseleave", untip);
   });
   $("#cadence-note").textContent = "peak: week of "+dshort(keys[keys.length-1])+" — "+bins.get(keys[keys.length-1]).length+" offers in 7 days";
+  const locCount = {};
+  DATA.forEach(x => { const l = x.loc || "unknown"; locCount[l] = (locCount[l]||0)+1; });
+  $("#lochips").innerHTML = Object.entries(locCount).sort((a,b)=>b[1]-a[1]).map(([l,c]) =>
+    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--c1)")+'"></span>'+l+' '+c+'</span>').join("");
 })();
 
 /* ---- fields horizontal bars (count-desc) ---- */
@@ -390,7 +401,7 @@ function untip(){ TIP.style.opacity = 0; }
     const term = q.value.trim().toLowerCase(), field = fs.value;
     const rows = DATA.filter(x =>
       (!channel || x.ch===channel) && (!field || x.f===field) &&
-      (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off).toLowerCase().includes(term))
+      (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off+" "+(x.loc||"")).toLowerCase().includes(term))
     ).slice().sort((a,b)=>b.d.localeCompare(a.d));
     tbody.innerHTML = rows.map(x =>
       '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+'</td>'+
