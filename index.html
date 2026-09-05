@@ -67,17 +67,18 @@ section>.lead{color:var(--ink-2); font-size:13.5px; margin:2px 0 16px; max-width
 .panel h3{margin:0 0 4px; font-size:14px; font-weight:600}
 .panel .pl{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin:0 0 14px}
 svg text{font-family:"IBM Plex Mono",monospace}
-svg .tick{font-size:10.5px; fill:var(--ink-mute); font-variant-numeric:tabular-nums}
+svg .tick{font-size:11px; fill:var(--ink-mute); font-variant-numeric:tabular-nums}
 svg .tick-strong{fill:var(--ink-2)}
 svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
 svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
 figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
+#cadence svg{max-width:760px; margin:0 auto; display:block}
 .frow{display:grid; grid-template-columns:172px 1fr 30px; gap:10px; align-items:center; margin-bottom:9px}
 .frow:last-child{margin-bottom:0}
 .frow .fname{font-size:12.5px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.frow .fbar{height:18px; border-radius:0 4px 4px 0; min-width:3px}
+.frow .fbar{height:20px; border-radius:0 4px 4px 0; min-width:3px}
 .frow .fcount{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
 @media (max-width:520px){
   .wrap{padding:28px 16px 56px}
@@ -89,9 +90,13 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .frow .fcount{grid-column:2; grid-row:2}
 }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
-.chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px}
+.chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
+.chip:hover{border-color:var(--axis)}
+.chip:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.chip[aria-pressed="true"]{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
 .chip .dot{width:8px; height:8px; border-radius:50%}
 .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+.controls .chips{margin-top:0}
 .controls input[type=search]{
   font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface);
   border:1px solid var(--border); border-radius:8px; padding:8px 12px; width:min(340px,100%);
@@ -110,7 +115,12 @@ td .co{font-weight:600; color:var(--ink)}
 td .off{color:var(--ink-2); max-width:44ch; display:block}
 .fd{display:inline-flex; align-items:center; gap:7px; white-space:nowrap; color:var(--ink-2)}
 .fd i{width:9px; height:9px; border-radius:3px; flex:none}
-.ans{color:var(--good); font-family:"IBM Plex Mono",monospace; font-size:12px; white-space:nowrap}
+@media (max-width:640px){
+  table{min-width:520px; font-size:12px}
+  th,td{padding:8px 10px}
+  td .off{max-width:none}
+  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+}
 .foot{color:var(--ink-mute); font-size:12.5px; border-top:1px solid var(--grid); padding-top:16px; margin-top:52px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
 #tip{
   position:fixed; z-index:9; pointer-events:none; opacity:0; transition:opacity .12s;
@@ -183,7 +193,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   <div class="tblwrap">
     <table>
       <thead><tr>
-        <th>Received</th><th>Company</th><th>Field</th><th>Channel</th><th>Offer</th><th>Answered</th>
+        <th>Received</th><th>Company</th><th>Field</th><th>Channel</th><th>Offer</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
@@ -191,7 +201,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 </section>
 
 <footer class="foot">
-  <span>Adding an offer? Everything is one <span class="mono">DATA</span> array in <span class="mono">index.html</span> — see <span class="mono">AGENTS.md</span> for the workflow.</span>
+  <span><strong>Want to make me an offer?</strong> That's the one pitch this page hasn't received yet — <a href="https://srdkn.com" style="color:var(--ink-2); text-decoration:underline; text-underline-offset:3px">srdkn.com</a>.</span>
   <span class="mono">built 2026-09-05 · IBM Plex · validated palette</span>
 </footer>
 
@@ -202,13 +212,12 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 /* ================= DATA — ADD NEW OFFERS HERE =================
    {d:"YYYY-MM-DD" (first contact), co:company, f:field (see FIELDS keys),
     ch:"gmail"|"linkedin", off:short offer text,
-    base:[loK, hiK] or null, pings:messages from recruiter (1 = single),
-    ans:"YYYY-MM-DD" I answered}
+    base:[loK, hiK] or null, pings:messages from recruiter (1 = single)}
    NOTE: recruiters are anonymized on purpose — channel only, no names, no emails.
 ================================================================ */
 const FIELDS = {
   "AI & physical security":  "c1",
-  "Frontend (unnamed clients)": "c2",
+  "Unnamed client": "c2",
   "AI agents & automation":  "c3",
   "Creative & generative AI":"c4",
   "Data & infra":            "c5",
@@ -217,27 +226,27 @@ const FIELDS = {
   "Staffing (multi-role)":   "c8",
 };
 const DATA = [
- {d:"2026-07-21", co:"Stealth AI-security co", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1, ans:"2026-07-27"},
- {d:"2026-07-27", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1, ans:"2026-07-27"},
- {d:"2026-08-04", co:"Coram AI", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1, ans:"2026-08-05"},
- {d:"2026-08-05", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1, ans:"2026-08-05"},
- {d:"2026-08-08", co:"Backflip.AI", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1, ans:"2026-08-10"},
- {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1, ans:"2026-09-05"},
- {d:"2026-08-13", co:"DatologyAI", f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2, ans:"2026-09-05"},
- {d:"2026-08-14", co:"RapidAI", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1, ans:"2026-09-05"},
- {d:"2026-08-19", co:"Airbyte", f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1, ans:"2026-09-04"},
- {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3, ans:"2026-09-05"},
- {d:"2026-08-21", co:"Coframe", f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3, ans:"2026-09-05"},
- {d:"2026-08-24", co:"Unnamed Series B audio AI", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1, ans:"2026-09-05"},
- {d:"2026-08-25", co:"Decagon", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2, ans:"2026-09-05"},
- {d:"2026-08-25", co:"Phylo", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3, ans:"2026-09-05"},
- {d:"2026-08-26", co:"TechLine Consulting (clients)", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1, ans:"2026-09-04"},
- {d:"2026-09-01", co:"Poka Labs", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3, ans:"2026-09-05"},
- {d:"2026-09-01", co:"Coram AI", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2, ans:"2026-09-05"},
- {d:"2026-09-04", co:"Cylake", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1, ans:"2026-09-05"},
- {d:"2026-09-04", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1, ans:"2026-09-04"},
- {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1, ans:"2026-09-04"},
- {d:"2026-09-04", co:"Unnamed client (via LinkedIn)", f:"Frontend (unnamed clients)", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1, ans:"2026-09-04"},
+ {d:"2026-07-21", co:"Stealth AI-security co", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1},
+ {d:"2026-07-27", co:"Unnamed client (NPM component library)", f:"Unnamed client", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1},
+ {d:"2026-08-04", co:"Coram AI", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1},
+ {d:"2026-08-05", co:"Unnamed client (senior frontend)", f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1},
+ {d:"2026-08-08", co:"Backflip.AI", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1},
+ {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1},
+ {d:"2026-08-13", co:"DatologyAI", f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2},
+ {d:"2026-08-14", co:"RapidAI", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1},
+ {d:"2026-08-19", co:"Airbyte", f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1},
+ {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3},
+ {d:"2026-08-21", co:"Coframe", f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3},
+ {d:"2026-08-24", co:"Unnamed Series B audio AI", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1},
+ {d:"2026-08-25", co:"Decagon", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2},
+ {d:"2026-08-25", co:"Phylo", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3},
+ {d:"2026-08-26", co:"TechLine Consulting (clients)", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1},
+ {d:"2026-09-01", co:"Poka Labs", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3},
+ {d:"2026-09-01", co:"Coram AI", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2},
+ {d:"2026-09-04", co:"Cylake", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", f:"Unnamed client", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (frontend UI)", f:"Unnamed client", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1},
 ];
 /* =================== end of data — charts below =================== */
 
@@ -264,11 +273,12 @@ function untip(){ TIP.style.opacity = 0; }
   const bases = DATA.filter(x=>x.base);
   const lo = Math.min(...bases.map(x=>x.base[0])), hi = Math.max(...bases.map(x=>x.base[1]));
   const gmail = DATA.filter(x=>x.ch==="gmail").length;
+  const ai = DATA.filter(x => /AI|artificial intelligence/i.test(x.co+" "+x.f+" "+x.off)).length;
   const t = [
     [n, "offers logged", "Jul 21 → Sep 5 · one every "+per+" days"],
     [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
-    ["100%", "answered", "every single one — politely"],
-    [money(lo)+"–"+money(hi), "advertised bases", "8 of "+n+" stated a range"],
+    [ai+"/"+n, "pitches are about AI", "it's the whole market, apparently"],
+    [money(lo)+"–"+money(hi), "advertised bases", bases.length+" of "+n+" stated a range"],
     [pings, "follow-up pings", "endured without folding"],
   ];
   $("#tiles").innerHTML = t.map(([v,k,note]) =>
@@ -325,7 +335,7 @@ function untip(){ TIP.style.opacity = 0; }
 (function(){
   const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
   const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
-  const W = 620, rowH = 34, padL = 8, padR = 96, top = 8;
+  const W = 620, rowH = 32, padL = 8, padR = 132, top = 8;
   const H = rows.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
   let marks = "", grid = "";
@@ -337,7 +347,7 @@ function untip(){ TIP.style.opacity = 0; }
     marks += '<g class="drow"><line x1="'+xs(r.base[0])+'" y1="'+y+'" x2="'+xs(r.base[1])+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[0])+'" cy="'+y+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[1])+'" cy="'+y+'" r="4.5" fill="var(--accent)"/>'+
-      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+r.co.replace(/ \(.*\)/,"").slice(0,16)+'</text></g>';
+      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+r.co.replace(/ \(.*\)/,"").slice(0,20)+'</text></g>';
   });
   $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
     grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+0)+'">$K base</text></svg>';
@@ -352,25 +362,30 @@ function untip(){ TIP.style.opacity = 0; }
 (function(){
   const tbody = $("#rows"), q = $("#q"), fs = $("#fieldsel");
   fs.innerHTML = '<option value="">all fields</option>' + Object.keys(FIELDS).map(f=>'<option>'+f+'</option>').join("");
+  let channel = null;
   $("#chips").innerHTML = ['gmail','linkedin'].map(c => {
     const n = DATA.filter(x=>x.ch===c).length;
     const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
-    return '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+' '+n+'</span>';
+    return '<button type="button" class="chip" data-ch="'+c+'" aria-pressed="false"><span class="dot" style="background:'+col+'"></span>'+c+' '+n+'</button>';
   }).join("");
+  $("#chips").querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+    channel = channel === b.dataset.ch ? null : b.dataset.ch;
+    $("#chips").querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.ch === channel ? "true" : "false"));
+    draw();
+  }));
   function draw(){
     const term = q.value.trim().toLowerCase(), field = fs.value;
     const rows = DATA.filter(x =>
-      (!field || x.f===field) &&
+      (!channel || x.ch===channel) && (!field || x.f===field) &&
       (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off).toLowerCase().includes(term))
     ).slice().sort((a,b)=>b.d.localeCompare(a.d));
     tbody.innerHTML = rows.map(x =>
-      '<tr><td class="num">'+x.d+'</td>'+
+      '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+'</td>'+
       '<td><span class="co">'+x.co+'</span><span class="off">'+x.off+'</span></td>'+
       '<td><span class="fd"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span></td>'+
       '<td class="num">'+x.ch+(x.pings>1?' ·'+x.pings+' pings':'')+'</td>'+
-      '<td class="num">'+(x.base?money(x.base[0])+'–'+money(x.base[1]):'—')+'</td>'+
-      '<td class="ans">answered '+x.ans+'</td></tr>').join("") ||
-      '<tr><td colspan="6" style="color:var(--ink-mute)">nothing matches</td></tr>';
+      '<td class="num">'+(x.base?money(x.base[0])+'–'+money(x.base[1]):'—')+'</td></tr>').join("") ||
+      '<tr><td colspan="5" style="color:var(--ink-mute)">nothing matches</td></tr>';
   }
   q.addEventListener("input", draw);
   fs.addEventListener("change", draw);

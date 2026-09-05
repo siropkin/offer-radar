@@ -15,7 +15,7 @@ Data that makes it into `index.html`:
 - ❌ recruiter names, emails, agency names, calendar links, anything identifying a person
 
 If a recruiter's identity is the interesting part of the story, it stays out.
-"Unnamed client (via LinkedIn)" is the correct way to log a pitch you can't name.
+"Unnamed client (…)" with a short distinguishing hint is the correct way to log a pitch you can't name — the hint keeps rows distinct in the companies count.
 
 ## Updating with new offers
 
@@ -23,7 +23,7 @@ If a recruiter's identity is the interesting part of the story, it stays out.
    LinkedIn sections — `f` = first contact date, not the follow-up).
 2. Strip recruiter names/emails; keep everything else.
 3. Append rows to the `DATA` array in `index.html`. One offer = one object:
-   `{d, co, f, ch, off, base, pings, ans}` — see the comment above the array.
+   `{d, co, f, ch, off, base, pings}` — see the comment above the array.
 4. Map the company to a field in `FIELDS`. **There are exactly 8 slots (c1–c8)
    and their color order is CVD-validated — never reorder or add a 9th slot.**
    A genuinely new field folds into the closest existing one or into
