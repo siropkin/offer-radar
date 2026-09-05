@@ -10,7 +10,7 @@
 :root{
   color-scheme: light;
   --page:#f9f9f7; --surface:#fcfcfb;
-  --ink:#0b0b0b; --ink-2:#52514e; --ink-mute:#898781;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-mute:#75736d;
   --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
   --accent:#2a78d6; --accent-soft:#cde2fb;
   --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300; --c7:#4a3aa7; --c8:#e34948;
@@ -58,7 +58,7 @@ header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(-
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
 .tile{background:var(--surface); padding:16px 18px 14px}
 .tile .v{font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1}
-.tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.05em; text-transform:uppercase}
+.tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.08em; text-transform:uppercase}
 .tile .note{font-size:12px; color:var(--ink-2); margin-top:2px}
 section{margin-bottom:46px}
 section>h2{font-size:19px; font-weight:600; margin-bottom:2px}
@@ -99,8 +99,10 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .frow .fcount{grid-column:2; grid-row:2}
 }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
-.chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
+.chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.55; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
 .chip:hover{border-color:var(--axis)}
+span.chip{cursor:default}
+span.chip:hover{border-color:var(--border)}
 .chip:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 .chip[aria-pressed="true"]{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
 .chip .dot{width:8px; height:8px; border-radius:50%}
@@ -108,12 +110,11 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
 .controls .chips{margin-top:0}
 .controls input[type=search]{
   font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface);
-  border:1px solid var(--border); border-radius:8px; padding:8px 12px; width:min(340px,100%);
+  border:1px solid var(--border); border-radius:8px; padding:8px 12px; width:min(340px,100%); height:37px;
 }
 .controls input[type=search]::placeholder{color:var(--ink-mute)}
-.controls input[type=search]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
-.controls select{font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
-.controls select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls input[type=search]:focus-visible,.controls select:focus-visible,a:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.controls select{font:13px "IBM Plex Mono",monospace; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; height:37px}
 .tblwrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px}
 table{border-collapse:collapse; width:100%; min-width:720px; background:var(--surface); font-size:13px}
 th{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-mute); font-weight:600; text-align:left; padding:10px 14px; border-bottom:1px solid var(--axis)}
@@ -127,7 +128,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 @media (max-width:640px){
   .controls{display:grid; grid-template-columns:1fr 1fr; gap:10px}
   .controls input[type=search]{grid-column:1 / -1; width:100%}
-  .controls select{width:100%}
+  .controls select{grid-column:1 / -1; width:100%}
   .controls .chips{grid-column:1 / -1}
   table{min-width:520px; font-size:12px}
   th,td{padding:8px 10px}
@@ -136,13 +137,14 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 }
 .foot{color:var(--ink-mute); font-size:12.5px; border-top:1px solid var(--grid); padding-top:16px; margin-top:52px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
 #tip{
-  position:fixed; z-index:9; pointer-events:none; opacity:0; transition:opacity .12s;
-  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  position:fixed; z-index:9; pointer-events:none; opacity:0;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px; width:max-content;
   padding:9px 12px; font-size:12px; color:var(--ink-2); max-width:260px;
   box-shadow:0 4px 14px rgba(0,0,0,.12); font-family:"IBM Plex Mono",monospace;
 }
 #tip b{color:var(--ink); font-weight:600}
 @media (prefers-reduced-motion:no-preference){
+  #tip{transition:opacity .12s}
   .frow .fbar, .bar rect{transition:opacity .15s}
   .bar:hover rect, .frow:hover .fbar{opacity:.82}
 }
@@ -208,7 +210,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   <div class="tblwrap">
     <table>
       <thead><tr>
-        <th>Received</th><th>Company</th><th>Field</th><th>Channel</th><th>Offer</th>
+        <th>Received</th><th>Company</th><th>Field</th><th>Channel</th><th>Base</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
@@ -326,14 +328,15 @@ function untip(){ TIP.style.opacity = 0; }
     '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
   $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
     const items = bins.get(keys[i]);
-    g.addEventListener("mousemove", e => tip("<b>Week of "+dshort(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
+    g.addEventListener("mousemove", e => tip("<b>Week of "+dshort(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
   });
-  $("#cadence-note").textContent = "peak: week of "+dshort(keys[keys.length-1])+" — "+bins.get(keys[keys.length-1]).length+" offers in 7 days";
+  const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
+  $("#cadence-note").textContent = "peak: week of "+dshort(peak)+" — "+bins.get(peak).length+" offers in 7 days";
   const locCount = {};
   DATA.forEach(x => { const l = x.loc || "unknown"; locCount[l] = (locCount[l]||0)+1; });
   $("#lochips").innerHTML = Object.entries(locCount).sort((a,b)=>b[1]-a[1]).map(([l,c]) =>
-    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--c1)")+'"></span>'+l+' '+c+'</span>').join("");
+    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--ink-2)")+'"></span>'+l+' '+c+'</span>').join("");
 })();
 
 /* ---- fields horizontal bars (count-desc) ---- */
@@ -348,7 +351,7 @@ function untip(){ TIP.style.opacity = 0; }
     '<div class="fcount">'+c+'</div></div>').join("");
   $("#fields").querySelectorAll(".fbar").forEach(el => {
     const f = el.dataset.f;
-    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+DATA.filter(x=>x.f===f).map(x=>x.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
+    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+DATA.filter(x=>x.f===f).map(x=>x.co).join("<br>"), e.clientX, e.clientY));
     el.addEventListener("mouseleave", untip);
   });
 })();
@@ -357,7 +360,7 @@ function untip(){ TIP.style.opacity = 0; }
 (function(){
   const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
   const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
-  const W = 620, rowH = 32, padL = 8, padR = 132, top = 8;
+  const W = 620, rowH = 32, padL = 8, padR = 144, top = 8;
   const H = rows.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
   let marks = "", grid = "";
@@ -372,7 +375,7 @@ function untip(){ TIP.style.opacity = 0; }
       '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+r.co.replace(/ \(.*\)/,"").slice(0,20)+'</text></g>';
   });
   $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
-    grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+0)+'">$K base</text></svg>';
+    grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+4)+'">$K base</text></svg>';
   const fs = $("#fields");
   if (fs) fs.style.height = $("#comp").getBoundingClientRect().height + "px";
   $("#comp").querySelectorAll("g.drow").forEach((g,i) => {
