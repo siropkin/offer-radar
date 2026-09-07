@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offer Radar</title>
-<meta name="description" content="A public log of recruiter pitches I've received and politely declined — cadence, fields, and advertised salary ranges.">
+<meta name="description" content="A public log of recruiter pitches I've received and answered — cadence, fields, and advertised salary ranges.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
@@ -158,7 +158,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
-    <p class="sub">Every pitch that landed in my inbox, logged — and politely declined. All <span id="na"></span> answered, zero moves made. Recruiters anonymized; the offers speak for themselves.</p>
+    <p class="sub">Every pitch that landed since January 2025, logged — all <span id="na"></span> answered, one accepted. Recruiters anonymized; the offers speak for themselves.</p>
   </div>
   <div class="stamp">updated 2026-09-07</div>
 </header>
@@ -167,9 +167,9 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>Cadence</h2>
-  <p class="lead">First contact per offer, binned by week. The market found me about once every two days all August — and then doubled down.</p>
+  <p class="lead">First contact per offer, binned by month. The DC-area contract years, the Verkada moment — and the Bay Area AI wave that followed it.</p>
   <figure class="panel">
-    <h3>Offers per week</h3>
+    <h3>Offers per month</h3>
     <p class="pl">first contact date · hover a bar for who pinged</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
@@ -180,7 +180,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 <div class="cols">
   <section>
     <h2>Fields</h2>
-    <p class="lead">What they think I do all day. Physical-security AI leads — Verkada does follow a person around.</p>
+    <p class="lead">What they think I do all day. Unnamed staffing clients lead the count — the named AI companies showed up after the Verkada move.</p>
     <figure class="panel">
       <h3>By company field</h3>
       <p class="pl"><span id="nof"></span> offers across <span id="nfl"></span> fields</p>
@@ -201,7 +201,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>The log</h2>
-  <p class="lead">Full record. Filter by company, field, or channel.</p>
+  <p class="lead">Full record since January 2025 — pitches, referral outreach, and the one offer that ended the hunt. Filter by company, field, or channel.</p>
   <div class="controls">
     <input type="search" id="q" placeholder="filter… e.g. frontend, agents, gmail" aria-label="Filter offers">
     <select id="fieldsel" aria-label="Filter by field"></select>
@@ -237,44 +237,167 @@ const FIELDS = {
   "Unnamed client": "c2",
   "AI agents & automation":  "c3",
   "Creative & generative AI":"c4",
-  "Data & infra":            "c5",
+  "Data, infra & robotics":  "c5",
   "Healthcare AI":           "c6",
-  "Productivity & tools":    "c7",
-  "Staffing (multi-role)":   "c8",
+  "Big tech & fintech":      "c7",
+  "Staffing & contract":     "c8",
 };
 const DATA = [
- {d:"2026-07-21", co:"Stealth AI-security co", loc:"client-site travel", f:"AI & physical security", ch:"linkedin", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1},
- {d:"2026-07-27", co:"Unnamed client (NPM component library)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1},
- {d:"2026-08-04", co:"Coram AI", loc:"Sunnyvale", f:"AI & physical security", ch:"linkedin", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180,275], pings:1},
- {d:"2026-08-05", co:"Unnamed client (senior frontend)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer", base:null, pings:1},
- {d:"2026-08-08", co:"Backflip.AI", loc:"SF", f:"Creative & generative AI", ch:"linkedin", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1},
- {d:"2026-08-12", co:"Unnamed healthcare AI scale-up", loc:null, f:"Healthcare AI", ch:"linkedin", off:"Product Engineers (mid→staff/principal); React/TS, Node, SQL, Python", base:[300,500], pings:1},
- {d:"2026-08-13", co:"DatologyAI", loc:null, f:"Data & infra", ch:"linkedin", off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2},
- {d:"2026-08-14", co:"RapidAI", loc:"Burlingame", f:"Healthcare AI", ch:"linkedin", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220,245], pings:1},
- {d:"2026-08-19", co:"Airbyte", loc:null, f:"Data & infra", ch:"linkedin", off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1},
- {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", loc:null, f:"Productivity & tools", ch:"gmail", off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3},
- {d:"2026-08-21", co:"Coframe", loc:null, f:"Creative & generative AI", ch:"gmail", off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3},
- {d:"2026-08-24", co:"Unnamed Series B audio AI", loc:"SF", f:"Creative & generative AI", ch:"linkedin", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175,225], pings:1},
- {d:"2026-08-25", co:"Decagon", loc:"NYC or SF", f:"AI agents & automation", ch:"gmail", off:"SWE across levels, onsite NYC or SF; $200–400K base + equity", base:[200,400], pings:2},
- {d:"2026-08-25", co:"Phylo", loc:"South SF", f:"AI agents & automation", ch:"gmail", off:"Product engineer, South SF; AI agents for science", base:[200,300], pings:3},
- {d:"2026-08-26", co:"TechLine Consulting (clients)", loc:"SF/Peninsula", f:"Staffing (multi-role)", ch:"linkedin", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200,300], pings:1},
- {d:"2026-09-01", co:"Poka Labs", loc:"SF", f:"AI agents & automation", ch:"gmail", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180,230], pings:3},
- {d:"2026-09-01", co:"Coram AI", loc:"Sunnyvale", f:"AI & physical security", ch:"gmail", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2},
- {d:"2026-09-04", co:"Cylake", loc:null, f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", loc:"Foster City", f:"Unnamed client", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", loc:null, f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1},
- {d:"2026-09-04", co:"Unnamed client (frontend UI)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1},
- {d:"2026-09-06", co:"Unnamed client (AI talent pitch via Dev.to)", loc:null, f:"Unnamed client", ch:"gmail", off:"AI talent-engineer pitch — found me via Dev.to/GitHub; 8+ yrs AI experience (recruiter's own intro)", base:null, pings:1},
- {d:"2026-09-07", co:"Unnamed client (enterprise AI, VC-partnered recruiter)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer, enterprise-AI platform for financial/operational workflows; $300K + meaningful equity", base:null, pings:1},
+ {d:"2025-01-06", co:"Unnamed AI-security client", f:"AI & physical security", ch:"linkedin", loc:"Falls Church VA", off:"Two full-time remote roles (front end + back end) at an AI-security startup — 'transform the indefensible into the impenetrable'", base:null, pings:4},
+ {d:"2025-01-08", co:"Unnamed payments fintech", f:"Big tech & fintech", ch:"linkedin", loc:"McLean VA", off:"Full-stack engineer, Golang-heavy backend + JS/Angular — Series-A2 bank-payments fintech, Visa/Mastercard clients", base:[150, 185], pings:5},
+ {d:"2025-01-10", co:"Google", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Senior Software Engineer — special-team sourcer outreach; questionnaire filled, closed out Jan 23", base:null, pings:2},
+ {d:"2025-01-13", co:"EPAM", f:"Staffing & contract", ch:"gmail", loc:"USA", off:"Lead Frontend Engineer, EPAM USA (my application) — interviewed Feb 18, process wound down Feb 20", base:null, pings:3},
+ {d:"2025-01-13", co:"Unnamed client (UI Developer, contract)", f:"Unnamed client", ch:"linkedin", loc:"Newark DE", off:"Urgent UI Developer contract — VueJS/ES6, onsite from day 1", base:null, pings:2},
+ {d:"2025-01-21", co:"Stacklet", f:"Data, infra & robotics", ch:"linkedin", loc:"remote", off:"Senior Front End Engineer at a Series-B cloud-governance vendor ('governance as code') — call, then email follow-up with role deck", base:null, pings:4},
+ {d:"2025-01-22", co:"JotPsych", f:"Healthcare AI", ch:"linkedin", loc:"Washington DC", off:"Founding Frontend/UX Engineer — 4-person LLM-for-healthcare seed startup; three recruiter threads, coding challenge Feb 6, then silence", base:null, pings:6},
+ {d:"2025-01-24", co:"Capital One", f:"Big tech & fintech", ch:"linkedin", loc:"McLean/Richmond VA", off:"Software Engineers (Lead / People-Leader), IFX team — Java/Python/AWS; no sponsorship", base:null, pings:1},
+ {d:"2025-01-24", co:"Unnamed client (software-testing platform)", f:"Unnamed client", ch:"linkedin", loc:"McLean VA", off:"Senior engineer at a $47M-seed testing product shop — clients incl. Ethereum Foundation, Palantir, MongoDB; C++/Rust/TS", base:null, pings:2},
+ {d:"2025-02-03", co:"Phin Security", f:"AI & physical security", ch:"linkedin", loc:"remote", off:"Staff Software Engineer — $160K base negotiable, fully remote, high-sync", base:[160, 160], pings:4},
+ {d:"2025-02-10", co:"AWS", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Front End Engineer II, AWS Infrastructure Services — recruiter-run process after my application; interviewed Feb 19 – Mar 5, no offer", base:null, pings:4},
+ {d:"2025-02-17", co:"Unnamed client (financial, contract)", f:"Unnamed client", ch:"linkedin", loc:"Washington DC", off:"Full Stack Developer contract — React/Node/.NET on Azure for a direct financial client", base:null, pings:3},
+ {d:"2025-02-20", co:"Unnamed client (contract, $65/hr)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Software Developer contract — Python + Golang, $65/hr W2, 12+ months", base:null, pings:1},
+ {d:"2025-02-26", co:"DLA Piper", f:"Staffing & contract", ch:"linkedin", loc:"remote", off:"Senior JavaScript Engineer in an AI Incubator serving Fortune-10 clients — React/Redux/GraphQL, $180K base cap, quarterly NYC travel", base:[180, 180], pings:5},
+ {d:"2025-03-05", co:"Unnamed client (Sr SWE, contract)", f:"Unnamed client", ch:"linkedin", loc:"Annapolis MD", off:"Senior Software Engineer contract — US citizenship required, hybrid", base:null, pings:1},
+ {d:"2025-03-09", co:"Digg.com", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Early-role discussions for the Digg reboot — friend intro to the founder, call Mar 15, passed", base:null, pings:2},
+ {d:"2025-03-11", co:"Global hedge fund (e-trading)", f:"Big tech & fintech", ch:"linkedin", loc:"NYC", off:"Real-time UI Engineer rebuilding the credit-desk UI — React/TS, 5 days onsite; $300–450K total comp", base:null, pings:9},
+ {d:"2025-03-21", co:"Abstract Security", f:"AI & physical security", ch:"gmail", loc:null, off:"UI/Frontend role via a friend intro — tech-lead interview Mar 24–25, company decision Mar 28", base:null, pings:2},
+ {d:"2025-03-24", co:"TEKsystems", f:"Staffing & contract", ch:"linkedin", loc:null, off:"Multi-level engineer hiring — build a brand-new application from scratch", base:null, pings:4},
+ {d:"2025-03-28", co:"Unnamed client (React/TS contract)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Remote 1-year contract — React/TypeScript frontend", base:null, pings:2},
+ {d:"2025-04-01", co:"iCapital", f:"Big tech & fintech", ch:"linkedin", loc:"NYC", off:"Frontend AVP on the Distributed Ledger Technology team — React 18/TS; first-round interviews Apr 21–22", base:null, pings:3},
+ {d:"2025-04-01", co:"Armis", f:"AI & physical security", ch:"linkedin", loc:"remote", off:"Sr/Staff FullStack Engineers — pre-IPO security unicorn; two same-day threads", base:null, pings:2},
+ {d:"2025-04-02", co:"Carbon Robotics", f:"Data, infra & robotics", ch:"gmail", loc:"Seattle", off:"Sr Frontend (role NDA'd) — flown out for onsite Apr 14–15; follow-ups through May 5", base:null, pings:4},
+ {d:"2025-04-02", co:"Unnamed client (Lead/Sr Fullstack, contract)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Lead/Senior Fullstack Developer, W2 contract — JS/REST/Node/React/Next/AWS", base:null, pings:5},
+ {d:"2025-04-03", co:"Pre-seed legal SaaS", f:"AI agents & automation", ch:"linkedin", loc:"remote", off:"Lead Frontend Engineer at a <10-person pre-seed SaaS for legal professionals — up to $200K + equity", base:[200, 200], pings:4},
+ {d:"2025-04-08", co:"Unnamed generative-AI client", f:"Creative & generative AI", ch:"linkedin", loc:"Pittsburgh PA", off:"AI Integration Engineer — Node/React/Python/TS on a generative-AI platform; $115–130K", base:[115, 130], pings:1},
+ {d:"2025-04-14", co:"Oxford Global Resources", f:"Staffing & contract", ch:"linkedin", loc:"Herndon VA", off:"Senior ServiceNow Architect — hybrid, US citizenship required", base:null, pings:1},
+ {d:"2025-04-16", co:"Unnamed defense client", f:"Unnamed client", ch:"linkedin", loc:"Annapolis Junction MD", off:"Senior Java System Engineer — TS/SCI + Full Scope Poly, onsite; $175–200K", base:[175, 200], pings:1},
+ {d:"2025-05-01", co:"Kentik", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"Sr Frontend Engineer — recruiter outreach; assessment + interviews Jul 5–9, 'congrats on the new role'", base:null, pings:5},
+ {d:"2025-05-07", co:"Unnamed crypto-cybersecurity startup", f:"AI & physical security", ch:"linkedin", loc:"remote", off:"Senior Front-End Engineer, first hire — greenfield React; ex-government leadership on the team", base:null, pings:3},
+ {d:"2025-05-09", co:"Terminal Industries", f:"Data, infra & robotics", ch:"linkedin", loc:null, off:"Sr Full Stack Engineer — Vision Engine Runtime (real-time CV at the edge, Triton/TensorRT); same recruiter re-pitched by email days later", base:null, pings:4},
+ {d:"2025-05-13", co:"Unnamed client (cybersecurity Sr FE)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Senior Frontend Engineer — React/Node, high-performance applications", base:null, pings:5},
+ {d:"2025-05-14", co:"Bloomberg", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Senior Web Engineer — recruiter-driven process after my application; interviewed May 28 – Jun 13, no offer", base:null, pings:4},
+ {d:"2025-05-19", co:"TikTok", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Front End Software Engineer — recruiter-engaged after my application; interviewed May 21–27, rejected May 28", base:null, pings:3},
+ {d:"2025-05-21", co:"Bigeye", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"'Will you be Bigeye's next Sr. Frontend Engineer?' — replied same day, no process followed", base:null, pings:2},
+ {d:"2025-05-22", co:"Unnamed AI legal-tech client", f:"AI agents & automation", ch:"linkedin", loc:"NY", off:"Founding Senior/Principal FE — $6M seed, 3-person team, TypeScript/Next.js/Cursor; open salary + equity", base:null, pings:7},
+ {d:"2025-05-28", co:"Leidos", f:"Staffing & contract", ch:"linkedin", loc:"Woodlawn MD", off:"Senior Full Stack Developer (React/Node) — Digital Modernization; public-trust clearance, 10+ yrs, 5 days onsite", base:null, pings:5},
+ {d:"2025-06-03", co:"Infosys", f:"Staffing & contract", ch:"linkedin", loc:null, off:"Full-time UI React JS opening", base:null, pings:2},
+ {d:"2025-06-10", co:"Unnamed fintech partner", f:"Big tech & fintech", ch:"linkedin", loc:"remote", off:"Senior Frontend SWE — React-heavy, 10–20K equity shares/yr, unlimited PTO", base:null, pings:2},
+ {d:"2025-06-11", co:"Perfect Art", f:"Staffing & contract", ch:"gmail", loc:null, off:"React Developer — RU-language agency pitch; replied same day, no process", base:null, pings:2},
+ {d:"2025-06-12", co:"Apple", f:"Big tech & fintech", ch:"gmail", loc:null, off:"'Anton thinks you would be great for Apple' — referral outreach; no process followed", base:null, pings:1},
+ {d:"2025-06-12", co:"Uber", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Referral invite — Software Engineer II (Frontend); applied, no process followed", base:null, pings:1},
+ {d:"2025-06-12", co:"Microsoft", f:"Big tech & fintech", ch:"gmail", loc:null, off:"'You have been referred to Microsoft' — referral → application; no process followed", base:null, pings:1},
+ {d:"2025-06-12", co:"Verkada ★", f:"AI & physical security", ch:"gmail", loc:"San Mateo", off:"ACCEPTED — the one that ended the hunt. Frontend-track role (my application, recruiter-run process); offer signed Jul 9, 2025", base:null, pings:4},
+ {d:"2025-06-13", co:"Deutsche Bank", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Senior UI/UX Engineer (referral) — prescreen Jun 18, rejected Jun 25", base:null, pings:3},
+ {d:"2025-06-13", co:"Halliday", f:"Big tech & fintech", ch:"linkedin", loc:"NYC", off:"Senior Frontend Engineer (Crypto Intents x AI, relocation to NYC) — HM + coding interviews Jun 20 – Jul 3; took Verkada", base:null, pings:6},
+ {d:"2025-06-16", co:"Rocket Loans", f:"Big tech & fintech", ch:"linkedin", loc:"remote", off:"TypeScript Engineer — 50/50 TS + React, Nest/Node backend, AWS", base:null, pings:9},
+ {d:"2025-06-17", co:"Unnamed client (SWE-Frontend contract)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Software Engineer — Frontend, remote contract", base:null, pings:3},
+ {d:"2025-06-18", co:"Unnamed federal client", f:"Staffing & contract", ch:"linkedin", loc:"MD", off:"Cleared SWE — TS/SCI Full Scope Poly, DoD programs; $120K–$315K by level, full-time permanent", base:null, pings:1},
+ {d:"2025-06-20", co:"Handshake", f:"AI agents & automation", ch:"gmail", loc:null, off:"AI frontend role — CodeSignal (expired) + virtual interview Jun 24; final update Jul 9", base:null, pings:3},
+ {d:"2025-06-20", co:"Amazon (2nd approach)", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Post-call role share from Amazon HR — passed Jun 23", base:null, pings:2},
+ {d:"2025-06-20", co:"ExpediteInfoTech", f:"Staffing & contract", ch:"linkedin", loc:"remote", off:"AI Engineer with UI/UX — full-time remote on a federal prime contract (founder outreach)", base:null, pings:1},
+ {d:"2025-06-23", co:"Tenable", f:"AI & physical security", ch:"gmail", loc:null, off:"Sr. Full Stack — referral outreach; no process followed", base:null, pings:1},
+ {d:"2025-06-24", co:"Halcyon", f:"AI & physical security", ch:"gmail", loc:null, off:"Senior UI Engineer — friend intro, interviews Jul 2 & Jul 8; took Verkada", base:null, pings:4},
+ {d:"2025-06-24", co:"Unnamed telecom client", f:"Data, infra & robotics", ch:"linkedin", loc:"Philadelphia PA", off:"Data Visualization Lead — Deck.gl/React, long-term contract, telecom domain required", base:null, pings:2},
+ {d:"2025-06-24", co:"Unnamed client (Sr FE, data viz)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Senior Frontend Engineer — React, data visualization, Node/Go", base:null, pings:4},
+ {d:"2025-06-27", co:"Unnamed client (Golang/TS contract)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"SDE contract — Golang + TS/React on AWS; $60–63/hr, 5 months", base:null, pings:1},
+ {d:"2025-06-30", co:"Two Six Technologies", f:"Staffing & contract", ch:"linkedin", loc:null, off:"Front-end / full-stack developer — ≤1 day/week onsite", base:null, pings:1},
+ {d:"2025-07-02", co:"Unnamed client (webmail giant)", f:"Big tech & fintech", ch:"linkedin", loc:"remote", off:"Long-term full-time freelance React/Node — modernizing a 200M-user webmail platform", base:null, pings:2},
+ {d:"2025-07-03", co:"Incedo", f:"Staffing & contract", ch:"linkedin", loc:"South San Francisco", off:"Full Stack Lead", base:null, pings:1},
+ {d:"2025-07-08", co:"Unnamed stealth AI startup ($30M, a16z)", f:"AI agents & automation", ch:"linkedin", loc:"Mountain View", off:"Senior/Staff/Principal Frontend — 18-person team, ex-Google/Coinbase/Twitter; consumer AI apps, 4 days/wk onsite", base:null, pings:3},
+ {d:"2025-07-08", co:"Amazon", f:"Big tech & fintech", ch:"linkedin", loc:null, off:"Sr. Delivery Consultant (Migration) — AWS recruiter outreach", base:null, pings:2},
+ {d:"2025-07-10", co:"Clera", f:"AI agents & automation", ch:"gmail", loc:null, off:"Founder chat about an AI product role — passed (pitch email since deleted)", base:null, pings:2},
+ {d:"2025-07-13", co:"Sevco", f:"AI & physical security", ch:"gmail", loc:null, off:"Principal/Lead UI Engineer — passed Jul 14; Verkada offer signed Jul 9", base:null, pings:1},
+ {d:"2025-07-30", co:"Unnamed client (Sr Full Stack contract)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Senior Full Stack Engineer, long-term contract — Playwright/AppSync/Dynamo/Lambda/React", base:null, pings:1},
+ {d:"2025-09-19", co:"Unnamed client (Tech Support Eng, contract)", f:"Unnamed client", ch:"linkedin", loc:"Santa Clara CA", off:"Technical Support Engineer — Integrations, 12-month hybrid contract; $40–46/hr W2", base:null, pings:1},
+ {d:"2025-10-01", co:"Unnamed agentic-AI security startup", f:"AI & physical security", ch:"linkedin", loc:null, off:"Senior Frontend Engineer — ex-Palo Alto Networks founders; build the product from scratch, modern stack", base:null, pings:1},
+ {d:"2025-11-03", co:"Qumulex", f:"AI & physical security", ch:"linkedin", loc:null, off:"Sr. Front End Developer — cloud + IoT video surveillance and access control", base:null, pings:1},
+ {d:"2025-11-25", co:"Reevo", f:"AI agents & automation", ch:"linkedin", loc:null, off:"Frontend Engineer — 'AI-native Business OS', $80M from Khosla/Kleiner; ex-DoorDash eng head; $200–300K base (re-pitched Dec 2)", base:[200, 300], pings:2},
+ {d:"2025-11-26", co:"Unnamed security/AI startup", f:"AI & physical security", ch:"linkedin", loc:"SF", off:"Fullstack — React/TS/Next + Python/Node/Go, graph architecture; up to $220K + equity, onsite", base:[220, 220], pings:1},
+ {d:"2025-12-11", co:"Nebari", f:"AI & physical security", ch:"linkedin", loc:"SF", off:"AI agent-security startup — $10M pre-seed, ex-Microsoft/Tesla founders; Staff + Product Engineers, hybrid", base:null, pings:1},
+ {d:"2026-01-20", co:"Footprint", f:"Big tech & fintech", ch:"linkedin", loc:"NYC/SF", off:"Backend + Frontend Engineers — 'Stripe for identity', Series A $20M (Index/QED), 100% Rust backend, 4x YoY growth", base:null, pings:2},
+ {d:"2026-01-24", co:"Unnamed client (AI for cars?)", f:"Unnamed client", ch:"gmail", loc:null, off:"'From AI trading bots to AI for cars?' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-01-24", co:"Unnamed Series B client ($5m+)", f:"Unnamed client", ch:"gmail", loc:null, off:"Mid-to-Staff Product Engineering, Series B with a $5m+ raise (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-02-21", co:"Delve", f:"AI agents & automation", ch:"linkedin", loc:"SF", off:"AI-native compliance platform — $32M Series A, 10x growth; 'building agents, not dashboards'; $170–300K+ base, in-person", base:[170, 300], pings:1},
+ {d:"2026-02-22", co:"Ema", f:"AI agents & automation", ch:"linkedin", loc:null, off:"Software Engineer — Agentic OS / Generative Workflow Engine", base:null, pings:1},
+ {d:"2026-03-03", co:"Unnamed client (robotics/logistics analytics)", f:"Data, infra & robotics", ch:"linkedin", loc:"South SF", off:"Senior Full Stack Engineer (Analytics) — React/PostgreSQL/Python, contract-to-hire", base:null, pings:2},
+ {d:"2026-03-04", co:"Console", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"Engineering — $300K base, $30M Series A (pitch email since deleted)", base:[300, 300], pings:1},
+ {d:"2026-03-04", co:"AmariAI", f:"AI agents & automation", ch:"linkedin", loc:"SF", off:"Frontend Engineer — AI that reads shipment emails and does customs data entry; $150–220K + equity", base:[150, 220], pings:3},
+ {d:"2026-03-05", co:"PG&E (contract)", f:"Data, infra & robotics", ch:"linkedin", loc:"remote", off:"SWE contract (React/TS/Python) supporting the utility", base:null, pings:1},
+ {d:"2026-03-06", co:"Kiddom", f:"AI agents & automation", ch:"linkedin", loc:null, off:"Software Engineers — education platform, several open roles", base:null, pings:1},
+ {d:"2026-03-12", co:"Unnamed AI-agents-for-logistics client", f:"AI agents & automation", ch:"linkedin", loc:"SF", off:"Senior Frontend Engineer — AI agents transforming logistics, work closely with founders", base:null, pings:3},
+ {d:"2026-03-13", co:"Unnamed client (frontend, rethought)", f:"Unnamed client", ch:"gmail", loc:null, off:"'What if frontend engineering meant something different…' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-03-17", co:"Unnamed $2.2B AI startup", f:"AI agents & automation", ch:"gmail", loc:null, off:"Fullstack hiring at a $2.2B AI startup — ~$280K base (pitch email since deleted)", base:[280, 280], pings:1},
+ {d:"2026-03-18", co:"Frontier Video AI", f:"Creative & generative AI", ch:"gmail", loc:null, off:"Product for Frontier Video AI (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-03-24", co:"Unnamed autonomy/robotics co ($70M+)", f:"Data, infra & robotics", ch:"linkedin", loc:"South SF", off:"Director of Applications & Connected Services — operator-facing software for autonomous industrial fleets, hybrid", base:null, pings:2},
+ {d:"2026-03-26", co:"Base Power", f:"Data, infra & robotics", ch:"linkedin", loc:"Austin", off:"Product-minded Full Stack Engineer (frontend-leaning) — distributed battery network, 'fix the US power grid'", base:null, pings:2},
+ {d:"2026-04-07", co:"Unnamed life-sciences client", f:"Healthcare AI", ch:"linkedin", loc:"SF", off:"Staff/Senior Frontend — collaborative doc editing, highly stateful interfaces; Cursor/Claude in the workflow, hybrid", base:null, pings:2},
+ {d:"2026-04-09", co:"Aria", f:"AI agents & automation", ch:"gmail", loc:null, off:"Frontend @ Aria (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-04-09", co:"Blockit", f:"Healthcare AI", ch:"linkedin", loc:"SF", off:"Founding fullstack engineer — Sequoia / Jeff Weiner backed, hybrid", base:null, pings:2},
+ {d:"2026-04-10", co:"Unnamed client (unspecified role)", f:"Unnamed client", ch:"gmail", loc:null, off:"Recruiter intro, no company or role named (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-04-11", co:"Serval", f:"AI agents & automation", ch:"linkedin", loc:"SF/NYC", off:"AI-native enterprise automation, 'ServiceNow successor' — $127M raised / $1B valuation (Sequoia); ex-Verkada/Rippling builders, 5 days in-office", base:null, pings:2},
+ {d:"2026-04-14", co:"Unnamed client (SWE IV, San Jose)", f:"Unnamed client", ch:"linkedin", loc:"San Jose", off:"Software Engineer IV — product-minded frontend, geospatial interfaces", base:null, pings:2},
+ {d:"2026-04-15", co:"Unnamed healthcare AI scale-up", f:"Healthcare AI", ch:"linkedin", loc:null, off:"Product Engineers (mid→staff/principal); ex-DeepMind founders; React/TS, Node, SQL, Python; $300–500K cash, US remote or NYC hybrid", base:[300, 500], pings:3},
+ {d:"2026-04-15", co:"Cypress Group client", f:"AI agents & automation", ch:"linkedin", loc:null, off:"Senior/Staff Frontend — real-time collaborative document-editing platform", base:null, pings:2},
+ {d:"2026-04-15", co:"Unnamed client (Founding Full-Stack)", f:"Unnamed client", ch:"linkedin", loc:"SF", off:"Founding Full-Stack Engineer — $190–220K + benefits, remote or onsite", base:[190, 220], pings:3},
+ {d:"2026-04-17", co:"Unnamed decisioning/automation co", f:"AI agents & automation", ch:"linkedin", loc:"SF", off:"Founding Full Stack Engineer (TypeScript/Product), 0→1 build — $280–320K + equity, onsite", base:[280, 320], pings:2},
+ {d:"2026-04-17", co:"Clera (2nd round)", f:"AI agents & automation", ch:"gmail", loc:null, off:"Second founder-chat round (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-04-25", co:"Retell AI", f:"AI agents & automation", ch:"linkedin", loc:"Redwood City", off:"Senior Software Engineers — voice agents / digital workers; profitable hypergrowth; 6-day schedule (5 onsite / 1 remote)", base:null, pings:2},
+ {d:"2026-04-25", co:"Unnamed client (personal intro)", f:"Unnamed client", ch:"gmail", loc:null, off:"Recruiter outreach, personal-intro thread (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-04-30", co:"Replit", f:"AI agents & automation", ch:"linkedin", loc:"Foster City", off:"Sr/Staff Engineer, enterprise products — $9B Series D, 400M+ ARR, 40M+ developers, 60 engineers, 3 days/wk hybrid", base:null, pings:2},
+ {d:"2026-05-04", co:"Revel", f:"Data, infra & robotics", ch:"linkedin", loc:"LA", off:"Frontend-leaning full stack — real-time software controlling physical systems (rockets, industrial equipment); $150M Series B (Thrive), onsite, US citizenship", base:null, pings:3},
+ {d:"2026-05-05", co:"Unnamed well-funded AI startup", f:"AI agents & automation", ch:"linkedin", loc:"SF", off:"Senior engineer owning the frontend — React/TS, shape product with the founders; $180–240K + equity", base:[180, 240], pings:2},
+ {d:"2026-05-13", co:"Decagon", f:"AI agents & automation", ch:"linkedin", loc:"NYC or SF", off:"Senior SWE (Agents) — in-house in May, agency re-pitch in Aug; AI agents running CX for Hertz, Chime, Duolingo; Series D; $200–400K base + equity", base:[200, 400], pings:3},
+ {d:"2026-05-15", co:"Reducto", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"Eng @ Reducto — MIT founders, a16z/Benchmark, profitable (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-05-15", co:"Unnamed co-founder client", f:"Unnamed client", ch:"gmail", loc:null, off:"Co-founder looking for a Senior Product Engineer (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-05-18", co:"Netography", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"'200k flows per second at Netography?' — outreach back to my old employer (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-06-02", co:"Unnamed AI analytics/BI client", f:"Data, infra & robotics", ch:"linkedin", loc:"San Mateo", off:"Frontend Engineer — chat-based analytics, data visualization, agentic workflows; $180–240K", base:[180, 240], pings:1},
+ {d:"2026-06-15", co:"MartiniArt", f:"Creative & generative AI", ch:"linkedin", loc:"SF", off:"Full-Stack Engineer (Canvas) — 100+ AI models on one collaborative canvas; canvas/editor/node graph, onsite", base:null, pings:1},
+ {d:"2026-06-17", co:"Unnamed agency (SF/remote roles)", f:"Unnamed client", ch:"linkedin", loc:null, off:"'Roles we have available' — replied by email Jun 17 & Jun 30", base:null, pings:2},
+ {d:"2026-06-18", co:"budi", f:"Creative & generative AI", ch:"gmail", loc:null, off:"'Your budi project is interesting' — project-triggered outreach (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-06-30", co:"Unnamed client (MIT PhDs)", f:"Unnamed client", ch:"gmail", loc:null, off:"'Work with MIT PhDs — up to $400K base' (pitch email since deleted)", base:[400, 400], pings:1},
+ {d:"2026-06-30", co:"Unnamed client (a16z, ex-Citadel)", f:"Unnamed client", ch:"gmail", loc:null, off:"'Backed by a16z. Joined by ex-Citadel leaders' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-06-30", co:"Unnamed embedded-fintech client", f:"Big tech & fintech", ch:"gmail", loc:null, off:"'Help build the future of embedded financial solutions' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-06", co:"Unnamed enterprise-AI co ($380K)", f:"AI agents & automation", ch:"linkedin", loc:null, off:"Lead Frontend Engineer — AI replacing transformation consulting; live enterprise knowledge graphs, ROI dashboards; $380K base", base:[380, 380], pings:1},
+ {d:"2026-07-13", co:"Unnamed $60M-ARR startup", f:"Unnamed client", ch:"gmail", loc:"Bay Area", off:"$60M-ARR Bay Area startup (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-13", co:"Unnamed zero-trust-for-AI-agents startup", f:"AI & physical security", ch:"linkedin", loc:"Bay Area", off:"React/TS + Node/Go, AWS — security for AI agents, funding secured", base:null, pings:2},
+ {d:"2026-07-15", co:"Fanatics (via consultancy)", f:"Big tech & fintech", ch:"linkedin", loc:"San Mateo", off:"Senior Frontend Engineer (contract-to-hire) — search, recommendations, merchandising for millions of users; React/TS/Node, 4 days/wk hybrid", base:null, pings:3},
+ {d:"2026-07-20", co:"Tribe AI", f:"AI agents & automation", ch:"gmail", loc:null, off:"AI Product Engineer — Fortune-500 operations work (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-20", co:"Unnamed client (Sequoia-portfolio roles)", f:"Unnamed client", ch:"gmail", loc:null, off:"'Eng roles at Sequoia startups?' — agency multi-role pitch (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-20", co:"Gamma", f:"Creative & generative AI", ch:"gmail", loc:null, off:"'Gamma + Ivan + Engineer' — AI presentation tool (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-20", co:"Doss", f:"AI agents & automation", ch:"gmail", loc:"SF", off:"Sr Frontend Engineer @ Doss (SaaS, SF) (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-20", co:"Arena.AI", f:"AI agents & automation", ch:"gmail", loc:null, off:"Engineering @ Arena.AI (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-21", co:"Stealth AI-security co", f:"AI & physical security", ch:"linkedin", loc:"client-site travel", off:"Forward-deployed + core platform engineer; React/TS, Node/Go/Python, K8s; client-site travel", base:null, pings:1},
+ {d:"2026-07-27", co:"Unnamed client ('the hard parts')", f:"Unnamed client", ch:"gmail", loc:null, off:"'The front end and the hard parts behind it' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-07-27", co:"Unnamed client (NPM component library)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Frontend Engineer — React component library on NPM (React, TS, SCSS), up to $225K", base:null, pings:1},
+ {d:"2026-08-04", co:"Unnamed client (pre-Series A, live with customers)", f:"Unnamed client", ch:"gmail", loc:null, off:"Pre-Series-A startup, 'live with customers' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-08-04", co:"Unnamed client (product role, not posted)", f:"Unnamed client", ch:"gmail", loc:null, off:"Product role 'not posted publicly' (pitch email since deleted)", base:null, pings:1},
+ {d:"2026-08-04", co:"Coram AI", f:"AI & physical security", ch:"linkedin", loc:"Sunnyvale", off:"Senior+ Engineers (backend/full-stack/AI/FE), onsite Sunnyvale", base:[180, 275], pings:1},
+ {d:"2026-08-05", co:"Ampersand", f:"Data, infra & robotics", ch:"gmail", loc:null, off:"Product Engineer, Frontend + Foundational Frontend Engineer — $15M Series A; replied Aug 6–7, follow-up Aug 12", base:null, pings:2},
+ {d:"2026-08-05", co:"Unnamed client (senior frontend)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Senior Frontend Engineer", base:null, pings:1},
+ {d:"2026-08-08", co:"Backflip.AI", f:"Creative & generative AI", ch:"linkedin", loc:"SF", off:"Full Stack SWE, SF — foundation models for mechanical design", base:null, pings:1},
+ {d:"2026-08-12", co:"Unnamed client (agency follow-up)", f:"Unnamed client", ch:"gmail", loc:null, off:"Senior/Lead frontend follow-up pitch after my move to Verkada — same recruiter I'd heard from before", base:null, pings:1},
+ {d:"2026-08-13", co:"DatologyAI", f:"Data, infra & robotics", ch:"linkedin", loc:null, off:"Product engineer — dataset tools, APIs, product features", base:null, pings:2},
+ {d:"2026-08-14", co:"Unnamed client (Senior Integration Engineer)", f:"Unnamed client", ch:"gmail", loc:null, off:"Senior Integration Engineer — generic agency pitch; replied Aug 17", base:null, pings:2},
+ {d:"2026-08-14", co:"RapidAI", f:"Healthcare AI", ch:"linkedin", loc:"Burlingame", off:"Principal/Lead SWE, hybrid Burlingame; +20% bonus +6,000 stocks; no visa sponsorship", base:[220, 245], pings:1},
+ {d:"2026-08-19", co:"Airbyte", f:"Data, infra & robotics", ch:"linkedin", loc:null, off:"Senior Full Stack Engineer — orchestration, observability, lineage, streaming", base:null, pings:1},
+ {d:"2026-08-20", co:"Superhuman (ex-Grammarly)", f:"AI agents & automation", ch:"gmail", loc:null, off:"Front-end-leaning full-stack engineers, various levels", base:null, pings:3},
+ {d:"2026-08-21", co:"Coframe", f:"Creative & generative AI", ch:"gmail", loc:null, off:"Product Engineer owning a product line end-to-end (users → v0 → ship → metrics)", base:null, pings:3},
+ {d:"2026-08-24", co:"Unnamed Series B audio AI", f:"Creative & generative AI", ch:"linkedin", loc:"SF", off:"Frontend SWE, on-site SF; TS/React/Next.js; ex-Scale AI founders", base:[175, 225], pings:1},
+ {d:"2026-08-25", co:"Phylo", f:"AI agents & automation", ch:"gmail", loc:"South SF", off:"Product engineer, South SF; AI agents for science", base:[200, 300], pings:3},
+ {d:"2026-08-26", co:"Unnamed client ('top tier roles')", f:"Unnamed client", ch:"gmail", loc:null, off:"Generic 'top tier roles' pitch, follow-up next day; no reply", base:null, pings:2},
+ {d:"2026-08-26", co:"TechLine Consulting (clients)", f:"Staffing & contract", ch:"linkedin", loc:"SF/Peninsula", off:"Backend / full-stack / infra / ML roles across Bay Area seed–C startups", base:[200, 300], pings:1},
+ {d:"2026-09-01", co:"Poka Labs", f:"AI agents & automation", ch:"gmail", loc:"SF", off:"Full stack AI engineer, SF (5 days in-office) + equity; chemical-quoting agents", base:[180, 230], pings:3},
+ {d:"2026-09-01", co:"Coram AI", f:"AI & physical security", ch:"gmail", loc:"Sunnyvale", off:"Full-stack engineer, growth team; internal sales tool → product org", base:null, pings:2},
+ {d:"2026-09-04", co:"Cylake", f:"AI & physical security", ch:"linkedin", loc:null, off:"Frontend UI Engineer, founding team; Nir Zuk's new thing", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", f:"Unnamed client", ch:"linkedin", loc:"Foster City", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", f:"AI & physical security", ch:"linkedin", loc:null, off:"Frontend UI Engineer for security-team products", base:null, pings:1},
+ {d:"2026-09-04", co:"Unnamed client (frontend UI)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Frontend UI Software Engineer", base:null, pings:1},
+ {d:"2026-09-06", co:"Unnamed client (AI talent pitch via Dev.to)", f:"Unnamed client", ch:"gmail", loc:null, off:"AI talent-engineer pitch — found me via Dev.to/GitHub; 8+ yrs AI experience (recruiter's own intro)", base:null, pings:1},
+ {d:"2026-09-07", co:"Unnamed client (enterprise AI, VC-partnered recruiter)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Senior Frontend Engineer, enterprise-AI platform for financial/operational workflows; $300K + meaningful equity", base:null, pings:1}
 ];
 /* =================== end of data — charts below =================== */
 
 const $ = s => document.querySelector(s);
-$("#na").textContent = DATA.length;
-$("#nof").textContent = DATA.length;
-$("#nfl").textContent = Object.keys(FIELDS).length;
-$("#nbase").textContent = DATA.filter(x=>x.base).length;
-$("#nall").textContent = DATA.length;
 $("#na").textContent = DATA.length;
 $("#nof").textContent = DATA.length;
 $("#nfl").textContent = Object.keys(FIELDS).length;
@@ -305,9 +428,9 @@ function untip(){ TIP.style.opacity = 0; }
   const gmail = DATA.filter(x=>x.ch==="gmail").length;
   const ai = DATA.filter(x => /AI|artificial intelligence/i.test(x.co+" "+x.f+" "+x.off)).length;
   const locs2 = DATA.map(x=>x.loc).filter(Boolean);
-  const bay = locs2.filter(l => ["SF","South SF","Sunnyvale","Burlingame","Foster City","SF/Peninsula"].includes(l)).length;
+  const bay = locs2.filter(l => ["SF","South SF","South San Francisco","Sunnyvale","Burlingame","Foster City","San Mateo","Redwood City","Mountain View","Bay Area","SF/Peninsula"].includes(l)).length;
   const t = [
-    [n, "offers logged", dshort(DATA[0].d)+" → "+dshort(newest)+" · one every "+per+" days"],
+    [n, "offers logged", dshort(DATA[0].d)+(DATA[0].d.slice(0,4)!==newest.slice(0,4) ? " ’"+DATA[0].d.slice(2,4) : "")+" → "+dshort(newest)+" · one every "+per+" days"],
     [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
     [ai+"/"+n, "pitches are about AI", "it's the whole market, apparently"],
     [money(lo)+"–"+money(hi), "advertised bases", bases.length+" of "+n+" stated a range"],
@@ -318,11 +441,12 @@ function untip(){ TIP.style.opacity = 0; }
     '<div class="tile"><div class="v mono">'+v+'</div><div class="k">'+k+'</div><div class="note">'+note+'</div></div>').join("");
 })();
 
-/* ---- weekly cadence bar chart ---- */
+/* ---- monthly cadence bar chart ---- */
 (function(){
-  const wk = iso => { const d = new Date(iso+"T12:00"); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.toISOString().slice(0,10); };
+  const mk = iso => iso.slice(0,7);
+  const mlab = k => new Date(k+"-15T12:00").toLocaleDateString("en-US",{month:"short"})+" ’"+k.slice(2,4);
   const bins = new Map();
-  DATA.forEach(x => { const w = wk(x.d); (bins.get(w) || bins.set(w,[]).get(w)).push(x); });
+  DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
   const W = 660, H = 210, padL = 8, padB = 34, top = 30;
   const max = Math.max(...bins.values().map(a=>a.length));
@@ -334,22 +458,24 @@ function untip(){ TIP.style.opacity = 0; }
     bars += '<g class="bar"><rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+
             '" rx="4" fill="var(--accent)"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(y-7)+'" text-anchor="middle">'+items.length+'</text>';
-    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+dshort(k)+'</text>';
+    if (i % 2 === 0) labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k)+'</text>';
   });
   $("#cadence").innerHTML =
-    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per week">'+
+    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month">'+
     '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
   $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
     const items = bins.get(keys[i]);
-    g.addEventListener("mousemove", e => tip("<b>Week of "+dshort(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
+    g.addEventListener("mousemove", e => tip("<b>"+mlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
   });
   const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
-  $("#cadence-note").textContent = "peak: week of "+dshort(peak)+" — "+bins.get(peak).length+" offers in 7 days";
+  $("#cadence-note").textContent = "peak: "+mlab(peak)+" — "+bins.get(peak).length+" offers in one month";
   const locCount = {};
   DATA.forEach(x => { const l = x.loc || "unknown"; locCount[l] = (locCount[l]||0)+1; });
-  $("#lochips").innerHTML = Object.entries(locCount).sort((a,b)=>b[1]-a[1]).map(([l,c]) =>
-    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--ink-2)")+'"></span>'+l+' '+c+'</span>').join("");
+  const locs = Object.entries(locCount).sort((a,b)=>b[1]-a[1]);
+  $("#lochips").innerHTML = locs.slice(0,14).map(([l,c]) =>
+    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--ink-2)")+'"></span>'+l+' '+c+'</span>').join("") +
+    (locs.length > 14 ? '<span class="chip">+ '+(locs.length-14)+' more</span>' : "");
 })();
 
 /* ---- fields horizontal bars (count-desc) ---- */
@@ -364,7 +490,8 @@ function untip(){ TIP.style.opacity = 0; }
     '<div class="fcount">'+c+'</div></div>').join("");
   $("#fields").querySelectorAll(".fbar").forEach(el => {
     const f = el.dataset.f;
-    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+DATA.filter(x=>x.f===f).map(x=>x.co).join("<br>"), e.clientX, e.clientY));
+    const cos = DATA.filter(x=>x.f===f).map(x=>x.co);
+    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+cos.slice(0,18).join("<br>")+(cos.length>18 ? "<br>… +"+(cos.length-18)+" more" : ""), e.clientX, e.clientY));
     el.addEventListener("mouseleave", untip);
   });
 })();
@@ -373,7 +500,7 @@ function untip(){ TIP.style.opacity = 0; }
 (function(){
   const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
   const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
-  const W = 620, rowH = 32, padL = 8, padR = 144, top = 8;
+  const W = 620, rowH = 26, padL = 8, padR = 144, top = 8;
   const H = rows.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
   let marks = "", grid = "";
@@ -403,6 +530,7 @@ function untip(){ TIP.style.opacity = 0; }
   const tbody = $("#rows"), q = $("#q"), fs = $("#fieldsel");
   fs.innerHTML = '<option value="">all fields</option>' + Object.keys(FIELDS).map(f=>'<option>'+f+'</option>').join("");
   let channel = null;
+  const newestY = DATA.reduce((a,x)=> x.d > a ? x.d : a, DATA[0].d).slice(0,4);
   $("#chips").innerHTML = ['gmail','linkedin'].map(c => {
     const n = DATA.filter(x=>x.ch===c).length;
     const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
@@ -420,7 +548,7 @@ function untip(){ TIP.style.opacity = 0; }
       (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off+" "+(x.loc||"")).toLowerCase().includes(term))
     ).slice().sort((a,b)=>b.d.localeCompare(a.d));
     tbody.innerHTML = rows.map(x =>
-      '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+'</td>'+
+      '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+(x.d.slice(0,4)!==newestY ? " ’"+x.d.slice(2,4) : "")+'</td>'+
       '<td><span class="co">'+x.co+'</span><span class="off">'+x.off+'</span></td>'+
       '<td><span class="fd"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span></td>'+
       '<td class="num">'+x.ch+(x.pings>1?' ·'+x.pings+' pings':'')+'</td>'+

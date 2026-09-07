@@ -28,9 +28,9 @@ If a recruiter's identity is the interesting part of the story, it stays out.
    and their color order is CVD-validated — never reorder or add a 9th slot.**
    A genuinely new field folds into the closest existing one or into
    "Staffing (multi-role)". If that feels wrong, ask before inventing a 9th color.
-5. Update the `updated` stamp in the header and the two hardcoded dates in the
-   stat-tiles block ("2026-09-05" appears in the days-per-offer tile) — grep for
-   `2026-09-05` to catch them all.
+5. Update the `updated` stamp in the header and the `built` stamp in the footer.
+   All counts (total, per-field, stated-range, days-per-offer span) are computed
+   from `DATA` — nothing else is hardcoded.
 6. Verify locally: open `index.html` in a browser, check the tile counts, hover
    the cadence bars, run the filter box. `cli.mjs shot` via chrome-bridge works
    for a quick look.
