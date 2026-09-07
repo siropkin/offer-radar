@@ -158,9 +158,9 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
-    <p class="sub">Every pitch that landed in my inbox, logged — and politely declined. All 21 answered, zero moves made. Recruiters anonymized; the offers speak for themselves.</p>
+    <p class="sub">Every pitch that landed in my inbox, logged — and politely declined. All <span id="na"></span> answered, zero moves made. Recruiters anonymized; the offers speak for themselves.</p>
   </div>
-  <div class="stamp">updated 2026-09-05</div>
+  <div class="stamp">updated 2026-09-07</div>
 </header>
 
 <div class="tiles" id="tiles"></div>
@@ -183,7 +183,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <p class="lead">What they think I do all day. Physical-security AI leads — Verkada does follow a person around.</p>
     <figure class="panel">
       <h3>By company field</h3>
-      <p class="pl">21 offers across 8 fields</p>
+      <p class="pl"><span id="nof"></span> offers across <span id="nfl"></span> fields</p>
       <div id="fields"></div>
     </figure>
   </section>
@@ -194,7 +194,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
       <h3>Advertised base range</h3>
       <p class="pl">$K / year · min → max · hover a row</p>
       <div id="comp"></div>
-      <figcaption>8 of 21 offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
+      <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
   </section>
 </div>
@@ -219,7 +219,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <footer class="foot">
   <span><strong>Want to make me an offer?</strong> That's the one pitch this page hasn't received yet — <a href="https://srdkn.com" style="color:var(--ink-2); text-decoration:underline; text-underline-offset:3px">srdkn.com</a>.</span>
-  <span class="mono">built 2026-09-05 · IBM Plex · validated palette</span>
+  <span class="mono">built 2026-09-07 · IBM Plex · validated palette</span>
 </footer>
 
 </div>
@@ -264,10 +264,22 @@ const DATA = [
  {d:"2026-09-04", co:"Unnamed client (Staff SWE, Foster City)", loc:"Foster City", f:"Unnamed client", ch:"linkedin", off:"Staff Software Engineer, Foster City CA", base:null, pings:1},
  {d:"2026-09-04", co:"Unnamed AI-cybersecurity co ($125M)", loc:null, f:"AI & physical security", ch:"linkedin", off:"Frontend UI Engineer for security-team products", base:null, pings:1},
  {d:"2026-09-04", co:"Unnamed client (frontend UI)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Frontend UI Software Engineer", base:null, pings:1},
+ {d:"2026-09-06", co:"Unnamed client (AI talent pitch via Dev.to)", loc:null, f:"Unnamed client", ch:"gmail", off:"AI talent-engineer pitch — found me via Dev.to/GitHub; 8+ yrs AI experience (recruiter's own intro)", base:null, pings:1},
+ {d:"2026-09-07", co:"Unnamed client (enterprise AI, VC-partnered recruiter)", loc:null, f:"Unnamed client", ch:"linkedin", off:"Senior Frontend Engineer, enterprise-AI platform for financial/operational workflows; $300K + meaningful equity", base:null, pings:1},
 ];
 /* =================== end of data — charts below =================== */
 
 const $ = s => document.querySelector(s);
+$("#na").textContent = DATA.length;
+$("#nof").textContent = DATA.length;
+$("#nfl").textContent = Object.keys(FIELDS).length;
+$("#nbase").textContent = DATA.filter(x=>x.base).length;
+$("#nall").textContent = DATA.length;
+$("#na").textContent = DATA.length;
+$("#nof").textContent = DATA.length;
+$("#nfl").textContent = Object.keys(FIELDS).length;
+$("#nbase").textContent = DATA.filter(x=>x.base).length;
+$("#nall").textContent = DATA.length;
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const money = k => "$" + k + "K";
 const dshort = iso => new Date(iso+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
@@ -283,7 +295,8 @@ function untip(){ TIP.style.opacity = 0; }
 /* ---- stat tiles ---- */
 (function(){
   const n = DATA.length;
-  const days = (new Date("2026-09-05") - new Date(DATA[0].d)) / 864e5;
+  const newest = DATA.reduce((a,x)=> x.d > a ? x.d : a, DATA[0].d);
+  const days = (new Date(newest) - new Date(DATA[0].d)) / 864e5;
   const per = (days / n).toFixed(1);
   const cos = new Set(DATA.map(x => x.co)).size;
   const pings = DATA.reduce((s,x)=> s + (x.pings||1) - 1, 0);
@@ -294,7 +307,7 @@ function untip(){ TIP.style.opacity = 0; }
   const locs2 = DATA.map(x=>x.loc).filter(Boolean);
   const bay = locs2.filter(l => ["SF","South SF","Sunnyvale","Burlingame","Foster City","SF/Peninsula"].includes(l)).length;
   const t = [
-    [n, "offers logged", "Jul 21 → Sep 5 · one every "+per+" days"],
+    [n, "offers logged", dshort(DATA[0].d)+" → "+dshort(newest)+" · one every "+per+" days"],
     [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
     [ai+"/"+n, "pitches are about AI", "it's the whole market, apparently"],
     [money(lo)+"–"+money(hi), "advertised bases", bases.length+" of "+n+" stated a range"],
