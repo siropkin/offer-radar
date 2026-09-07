@@ -173,7 +173,18 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <p class="pl">first contact date · hover a bar for who pinged</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
-    <div class="chips" id="lochips" style="margin-top:12px"></div>
+  </figure>
+</section>
+
+<section>
+  <h2>Remote vs onsite</h2>
+  <p class="lead">Stated office policy per offer, by month of first contact. Remote didn't just fade — it fell off a cliff: 16 stated-remote offers in 2025, exactly one in 2026.</p>
+  <figure class="panel">
+    <h3>Stated location policy per month</h3>
+    <p class="pl">onsite/hybrid · remote · not stated · hover a bar for the split</p>
+    <div id="remote"></div>
+    <figcaption id="remote-note"></figcaption>
+    <div class="chips" id="remote-chips" style="margin-top:12px"></div>
   </figure>
 </section>
 
@@ -406,6 +417,7 @@ $("#nall").textContent = DATA.length;
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const money = k => "$" + k + "K";
 const dshort = iso => new Date(iso+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const mlab = (k, yr) => new Date(k+"-15T12:00").toLocaleDateString("en-US",{month:"short"})+(yr ? " ’"+k.slice(2,4) : "");
 const TIP = $("#tip");
 function tip(html, x, y){
   TIP.innerHTML = html; TIP.style.opacity = 1;
@@ -444,7 +456,6 @@ function untip(){ TIP.style.opacity = 0; }
 /* ---- monthly cadence bar chart ---- */
 (function(){
   const mk = iso => iso.slice(0,7);
-  const mlab = (k, yr) => new Date(k+"-15T12:00").toLocaleDateString("en-US",{month:"short"})+(yr ? " ’"+k.slice(2,4) : "");
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
@@ -470,12 +481,48 @@ function untip(){ TIP.style.opacity = 0; }
   });
   const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
   $("#cadence-note").textContent = "peak: "+mlab(peak, true)+" — "+bins.get(peak).length+" offers in one month";
-  const locCount = {};
-  DATA.forEach(x => { const l = x.loc || "unknown"; locCount[l] = (locCount[l]||0)+1; });
-  const locs = Object.entries(locCount).sort((a,b)=>b[1]-a[1]);
-  $("#lochips").innerHTML = locs.slice(0,14).map(([l,c]) =>
-    '<span class="chip"><span class="dot" style="background:'+(l==="unknown"?"var(--axis)":"var(--ink-2)")+'"></span>'+l+' '+c+'</span>').join("") +
-    (locs.length > 14 ? '<span class="chip">+ '+(locs.length-14)+' more</span>' : "");
+})();
+
+/* ---- remote vs onsite stacked bars (monthly) ---- */
+(function(){
+  const cls = x => { const l = x.loc; if (!l || l === "USA") return "unknown"; return /remote/i.test(l) ? "remote" : "onsite"; };
+  const CATS = [["onsite","var(--c1)"],["remote","var(--c3)"],["unknown","var(--axis)"]];
+  const bins = new Map();
+  DATA.forEach(x => { const m = x.d.slice(0,7); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
+  const keys = [...bins.keys()].sort();
+  const W = 940, H = 210, padL = 8, padB = 34, top = 30;
+  const max = Math.max(...bins.values().map(a=>a.length));
+  const bw = (W - padL*2) / keys.length;
+  let bars = "", labels = "";
+  keys.forEach((k,i) => {
+    const items = bins.get(k);
+    const counts = {}; items.forEach(x => counts[cls(x)] = (counts[cls(x)]||0)+1);
+    const total = items.length, h = total / max * (H - top - padB);
+    const x = padL + i*bw + 4, w = bw - 8;
+    let y = H - padB;
+    bars += '<g class="rbar" data-m="'+k+'">';
+    CATS.forEach(([c,col]) => {
+      const ch = (counts[c]||0) / total * h;
+      if (ch > 0) { y -= ch; bars += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(ch,2).toFixed(1)+'" fill="'+col+'"/>'; }
+    });
+    bars += '<rect x="'+x.toFixed(1)+'" y="'+(H-padB-h).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="transparent"/></g>';
+    bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(H-padB-h-7)+'" text-anchor="middle">'+total+'</text>';
+    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k, i===0 || k.endsWith("-01"))+'</text>';
+  });
+  $("#remote").innerHTML =
+    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Stated location policy per month">'+
+    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
+  $("#remote").querySelectorAll("g.rbar").forEach(g => {
+    const m = g.dataset.m;
+    const items = bins.get(m), counts = {};
+    items.forEach(x => counts[cls(x)] = (counts[cls(x)]||0)+1);
+    g.addEventListener("mousemove", e => tip("<b>"+mlab(m,true)+"</b><br>"+CATS.map(([c]) => c+" "+(counts[c]||0)).join("<br>"), e.clientX, e.clientY));
+    g.addEventListener("mouseleave", untip);
+  });
+  const tot = {}; DATA.forEach(x => tot[cls(x)] = (tot[cls(x)]||0)+1);
+  $("#remote-note").textContent = "half of all pitches never state a location — the rest went from remote-friendly contracts to Bay-Area in-office AI startups";
+  $("#remote-chips").innerHTML = CATS.map(([c,col]) =>
+    '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+" "+tot[c]+'</span>').join("");
 })();
 
 /* ---- fields horizontal bars (count-desc) ---- */
