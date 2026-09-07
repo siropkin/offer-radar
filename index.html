@@ -78,7 +78,8 @@ svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
 figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
-#cadence svg{max-width:760px; margin:0 auto; display:block}
+#cadence svg{max-width:940px; margin:0 auto; display:block}
+#cadence svg .mtick{font-size:10px}
 .cols .panel{display:flex; flex-direction:column}
 #fields{flex:1; display:flex; flex-direction:column; justify-content:space-evenly}
 #fields .frow{margin-bottom:0}
@@ -448,7 +449,7 @@ function untip(){ TIP.style.opacity = 0; }
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = 660, H = 210, padL = 8, padB = 34, top = 30;
+  const W = 940, H = 210, padL = 8, padB = 34, top = 30;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
@@ -458,7 +459,7 @@ function untip(){ TIP.style.opacity = 0; }
     bars += '<g class="bar"><rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+
             '" rx="4" fill="var(--accent)"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(y-7)+'" text-anchor="middle">'+items.length+'</text>';
-    if (i % 2 === 0) labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k)+'</text>';
+    labels += '<text class="tick tick-strong mtick" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k)+'</text>';
   });
   $("#cadence").innerHTML =
     '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month">'+
