@@ -91,11 +91,12 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
 #fields .frow{margin-bottom:0}
 #comp{flex:1; display:flex; flex-direction:column; justify-content:center}
 #comp svg{margin:0 auto; max-width:100%}
-.frow{display:grid; grid-template-columns:172px 1fr 30px; gap:10px; align-items:center; margin-bottom:9px}
+.frow{display:grid; grid-template-columns:172px 1fr 30px 78px; gap:10px; align-items:center; margin-bottom:9px}
 .frow:last-child{margin-bottom:0}
 .frow .fname{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .frow .fbar{height:20px; border-radius:0 4px 4px 0; min-width:3px}
 .frow .fcount{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
+.frow .fseen{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); white-space:nowrap}
 @media (max-width:520px){
   .wrap{padding:28px 16px 56px}
   .tile{padding:13px 14px 12px}
@@ -104,6 +105,7 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .frow .fname{grid-column:1 / -1; text-align:left}
   .frow .fbar{grid-column:1}
   .frow .fcount{grid-column:2; grid-row:2}
+  .frow .fseen{grid-column:1 / -1}
 }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
 .chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.55; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
@@ -199,7 +201,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 <div class="cols">
   <section>
     <h2>Fields</h2>
-    <p class="lead">What they think I do all day. <b>Unnamed staffing clients lead the count</b> — the named AI companies showed up after the Verkada move.</p>
+    <p class="lead">What they think I do all day. <b>Unnamed staffing clients lead the count</b> — and every AI field is a 2025 arrival; only staffing and unnamed clients go back to ’23–’24.</p>
     <figure class="panel">
       <h3>By company field</h3>
       <p class="pl"><span id="nof"></span> offers across <span id="nfl"></span> fields</p>
@@ -580,10 +582,13 @@ function eraSvg(keys, padL, bw, H, padB){
   DATA.forEach(x => counts[x.f] = (counts[x.f]||0)+1);
   const order = Object.entries(counts).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
   const max = order[0][1];
+  const firsts = {};
+  DATA.forEach(x => { if (!firsts[x.f] || x.d < firsts[x.f]) firsts[x.f] = x.d; });
   $("#fields").innerHTML = order.map(([f,c]) =>
     '<div class="frow"><div class="fname" title="'+f+'">'+f+'</div>'+
     '<div class="fbar" style="width:'+(c/max*100)+'%;background:var(--'+FIELDS[f]+')" data-f="'+f+'"></div>'+
-    '<div class="fcount">'+c+'</div></div>').join("");
+    '<div class="fcount">'+c+'</div>'+
+    '<div class="fseen">first '+mlab(firsts[f].slice(0,7), true)+'</div></div>').join("");
   $("#fields").querySelectorAll(".fbar").forEach(el => {
     const f = el.dataset.f;
     const cos = DATA.filter(x=>x.f===f).map(x=>x.co);
@@ -599,18 +604,26 @@ function eraSvg(keys, padL, bw, H, padB){
   const W = 620, rowH = 26, padL = 8, padR = 176, top = 8;
   const H = rows.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
+  const hiRow = rows.reduce((a,r)=> r.base[1] > a.base[1] ? r : a, rows[0]);
+  const mids = rows.map(r=>(r.base[0]+r.base[1])/2).sort((a,b)=>a-b);
+  const med = mids[Math.floor(mids.length/2)];
   let marks = "", grid = "";
   for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50)
     grid += '<line class="hair" x1="'+xs(v)+'" y1="'+top+'" x2="'+xs(v)+'" y2="'+(H-22)+'"/>'+
             '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
+  marks += '<line class="hair" x1="'+xs(med)+'" y1="16" x2="'+xs(med)+'" y2="'+(H-22)+'" stroke-dasharray="3 3"/>'+
+    '<text class="tick tick-strong" x="'+xs(med)+'" y="12" text-anchor="middle">median $'+med+'K</text>';
   rows.forEach((r,i) => {
     const y = top + i*rowH + rowH/2;
     let nm = r.co.replace(/ \(.*\)/,"");
     if (nm.length > 24) nm = nm.slice(0,23).replace(/[\s\-–\/]+$/,"")+"…";
+    const extreme = r === rows[0] ? '<text class="tick tick-strong" style="font-weight:600" x="'+(xs(r.base[1])+10)+'" y="'+(y+3.5)+'">$'+r.base[0]+'K</text>'
+      : r === hiRow ? '<text class="tick tick-strong" style="font-weight:600" x="'+(xs(r.base[0])-10)+'" y="'+(y+3.5)+'" text-anchor="end">$'+r.base[1]+'K</text>' : "";
+    const nmStyle = (r === rows[0] || r === hiRow) ? ' style="font-weight:600; fill:var(--ink)"' : "";
     marks += '<g class="drow"><line x1="'+xs(r.base[0])+'" y1="'+y+'" x2="'+xs(r.base[1])+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[0])+'" cy="'+y+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[1])+'" cy="'+y+'" r="4.5" fill="var(--accent)"/>'+
-      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+nm+'</text></g>';
+      '<text class="tick tick-strong"'+nmStyle+' x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+nm+'</text>'+extreme+'</g>';
   });
   $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
     grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+4)+'">$K base</text></svg>';
