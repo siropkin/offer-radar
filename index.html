@@ -82,6 +82,9 @@ svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
 svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
 svg .era{font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; fill:var(--ink-mute)}
+svg .pfname{font-size:12px; fill:var(--ink-2)}
+svg .pval{font-size:12px; fill:var(--ink); font-variant-numeric:tabular-nums}
+svg .pn{font-size:10px; fill:var(--ink-mute); font-variant-numeric:tabular-nums}
 @media (max-width:520px){ svg .era{display:none} }
 figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
@@ -608,31 +611,32 @@ function eraSvg(keys, padL, bw, H, padB){
       avg: Math.round(mids.reduce((s,m)=>s+m,0)/mids.length)};
   }).sort((a,b)=>b.avg-a.avg);
   const lo = Math.min(...order.map(o=>o.min)), hi = Math.max(...order.map(o=>o.max));
-  const W = 620, rowH = 30, padL = 8, padR = 176, top = 8;
-  const H = order.length*rowH + top + 22;
-  const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
+  const W = 570, rowH = 30, nameR = 168, trkL = 176, trkR = 448, avgX = 460, nX = 514, top = 16;
+  const H = order.length*rowH + top + 24;
+  const xs = v => trkL + (v - lo)/(hi - lo)*(trkR - trkL);
   const mids = DATA.filter(x=>x.base).map(r=>(r.base[0]+r.base[1])/2).sort((a,b)=>a-b);
   const med = mids[Math.floor(mids.length/2)];
   let marks = "", grid = "";
   for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50)
     grid += '<line class="hair" x1="'+xs(v)+'" y1="'+top+'" x2="'+xs(v)+'" y2="'+(H-22)+'"/>'+
             '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
-  marks += '<line class="hair" x1="'+xs(med)+'" y1="16" x2="'+xs(med)+'" y2="'+(H-22)+'" stroke-dasharray="3 3"/>'+
-    '<text class="tick tick-strong" x="'+xs(med)+'" y="12" text-anchor="middle">median $'+med+'K</text>';
+  marks += '<line class="hair" x1="'+xs(med)+'" y1="'+top+'" x2="'+xs(med)+'" y2="'+(H-22)+'" stroke-dasharray="3 3"/>'+
+    '<text class="tick tick-strong" x="'+xs(med)+'" y="11" text-anchor="middle">median $'+med+'K</text>';
   order.forEach((o,i) => {
     const y = top + i*rowH + rowH/2, col = "var(--"+FIELDS[o.f]+")";
-    const after = xs(o.avg)+10 > W-padR-52;
-    marks += '<g class="drow" data-f="'+o.f+'">'+
+    let nm = o.f;
+    if (nm.length > 22) nm = nm.slice(0,21).replace(/[\s&\/]+$/,"")+"…";
+    marks += '<g class="drow" data-f="'+o.f+'"><title>'+o.f+'</title>'+
       (o.max>o.min ? '<line x1="'+xs(o.min)+'" y1="'+y+'" x2="'+xs(o.max)+'" y2="'+y+'" stroke="'+col+'" stroke-width="2.5"/>'+
         '<circle cx="'+xs(o.min)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>'+
         '<circle cx="'+xs(o.max)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>' : '')+
       '<circle cx="'+xs(o.avg)+'" cy="'+y+'" r="5" fill="'+col+'"/>'+
-      '<text class="tick tick-strong" style="font-weight:600" x="'+(after ? xs(o.avg)-10 : xs(o.avg)+10)+'" y="'+(y-5)+'"'+(after?' text-anchor="end"':'')+'>$'+o.avg+'K</text>'+
-      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y-1)+'">'+o.f+'</text>'+
-      '<text class="tick" x="'+(W-padR+8)+'" y="'+(y+11)+'">n = '+o.n+'</text></g>';
+      '<text class="pfname" x="'+nameR+'" y="'+(y+4)+'" text-anchor="end">'+nm+'</text>'+
+      '<text class="pval" x="'+avgX+'" y="'+(y+4)+'">$'+o.avg+'K</text>'+
+      '<text class="pn" x="'+nX+'" y="'+(y+4)+'">n = '+o.n+'</text></g>';
   });
   $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base by field">'+
-    grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+4)+'">$K base</text></svg>';
+    grid+marks+'<text class="tick" x="'+(W-110)+'" y="11">$K base</text></svg>';
   const fs = $("#fields");
   if (fs) fs.style.height = $("#comp").getBoundingClientRect().height + "px";
   $("#comp").querySelectorAll("g.drow").forEach(g => {
