@@ -15,6 +15,7 @@
   --accent:#2a78d6; --accent-soft:#cde2fb;
   --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300; --c7:#4a3aa7; --c8:#e34948;
   --good:#006300; --chip-bg:rgba(11,11,11,.04);
+  --band-a:rgba(11,11,11,.05); --band-b:rgba(11,11,11,.018);
 }
 @media (prefers-color-scheme: dark){
   :root:where(:not([data-theme="light"])){
@@ -25,6 +26,7 @@
     --accent:#3987e5; --accent-soft:#184f95;
     --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
     --good:#0ca30c; --chip-bg:rgba(255,255,255,.05);
+    --band-a:rgba(255,255,255,.055); --band-b:rgba(255,255,255,.022);
   }
 }
 :root[data-theme="dark"]{
@@ -35,6 +37,7 @@
   --accent:#3987e5; --accent-soft:#184f95;
   --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; --c7:#9085e9; --c8:#e66767;
   --good:#0ca30c; --chip-bg:rgba(255,255,255,.05);
+  --band-a:rgba(255,255,255,.055); --band-b:rgba(255,255,255,.022);
 }
 *{box-sizing:border-box}
 body{
@@ -58,11 +61,13 @@ header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(-
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
 .tile{background:var(--surface); padding:16px 18px 14px}
 .tile .v{font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1}
+@media (min-width:521px){ .tile .v{white-space:nowrap} }
 .tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.08em; text-transform:uppercase}
 .tile .note{font-size:12px; color:var(--ink-2); margin-top:2px}
 section{margin-bottom:46px}
 section>h2{font-size:19px; font-weight:600; margin-bottom:2px}
 section>.lead{color:var(--ink-2); font-size:13.5px; margin:2px 0 16px; max-width:70ch}
+section>.lead b, header .sub b{color:var(--ink); font-weight:600}
 .cols{display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:stretch}
 .cols>section{display:flex; flex-direction:column}
 .cols>section>.panel{flex:1}
@@ -76,6 +81,8 @@ svg .tick-strong{fill:var(--ink-2)}
 svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
 svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
+svg .era{font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; fill:var(--ink-mute)}
+@media (max-width:520px){ svg .era{display:none} }
 figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
 #cadence svg{max-width:940px; margin:0 auto; display:block}
@@ -106,6 +113,7 @@ span.chip:hover{border-color:var(--border)}
 .chip:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 .chip[aria-pressed="true"]{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
 .chip .dot{width:8px; height:8px; border-radius:50%}
+.chip .dot.hatch{background:repeating-linear-gradient(45deg, var(--axis) 0 1.5px, transparent 1.5px 4.5px)}
 .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
 .controls .chips{margin-top:0}
 .controls input[type=search]{
@@ -158,19 +166,19 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
-    <p class="sub">Every pitch that landed since June 2023, logged — all <span id="na"></span> answered, one accepted. Recruiters anonymized; the offers speak for themselves.</p>
+    <p class="sub">Every pitch that landed since June 2023, logged — all <span id="na"></span> answered, <b>one accepted</b>. Recruiters anonymized; the offers speak for themselves.</p>
   </div>
-  <div class="stamp">updated 2026-09-12</div>
+  <div class="stamp">updated 2026-09-13</div>
 </header>
 
 <div class="tiles" id="tiles"></div>
 
 <section>
   <h2>Cadence</h2>
-  <p class="lead">First contact per offer, binned by month. The DC-area contract years, the Verkada moment — and the Bay Area AI wave that followed it.</p>
+  <p class="lead">First contact per offer, binned by month — the story runs in <b>four eras</b>: the quiet DC contract years, the hunt that ended at the Verkada sign, the lull after it, and the Bay Area AI wave that followed.</p>
   <figure class="panel">
     <h3>Offers per month</h3>
-    <p class="pl">first contact date · hover a bar for who pinged</p>
+    <p class="pl">first contact date · eras shaded · hover a bar for who pinged</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
   </figure>
@@ -178,7 +186,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>Remote vs onsite</h2>
-  <p class="lead">Stated office policy per offer, by month of first contact. Remote didn't just fade — it fell off a cliff: 2 stated-remote offers in 2024, 16 in 2025, exactly one in 2026.</p>
+  <p class="lead">Stated office policy per offer, by month of first contact. Remote didn't just fade — <b>it fell off a cliff</b>: 2 stated-remote offers in 2024, 16 in 2025, exactly one in 2026.</p>
   <figure class="panel">
     <h3>Stated location policy per month</h3>
     <p class="pl">onsite/hybrid · remote · not stated · hover a bar for the split</p>
@@ -191,7 +199,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 <div class="cols">
   <section>
     <h2>Fields</h2>
-    <p class="lead">What they think I do all day. Unnamed staffing clients lead the count — the named AI companies showed up after the Verkada move.</p>
+    <p class="lead">What they think I do all day. <b>Unnamed staffing clients lead the count</b> — the named AI companies showed up after the Verkada move.</p>
     <figure class="panel">
       <h3>By company field</h3>
       <p class="pl"><span id="nof"></span> offers across <span id="nfl"></span> fields</p>
@@ -200,10 +208,10 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   </section>
   <section>
     <h2>Price tags</h2>
-    <p class="lead">Advertised base-salary ranges, where stated. The healthcare AI scale-up thinks I'm worth twice what the audio one does.</p>
+    <p class="lead">Advertised base-salary ranges, where stated. The healthcare AI scale-up thinks I'm worth <b>twice</b> what the audio one does.</p>
     <figure class="panel">
       <h3>Advertised base range</h3>
-      <p class="pl">$K / year · min → max · hover a row</p>
+      <p class="pl">$K / year · ○ min → ● max · hover a row</p>
       <div id="comp"></div>
       <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
@@ -439,6 +447,29 @@ function tip(html, x, y){
 }
 function untip(){ TIP.style.opacity = 0; }
 
+/* ---- eras: the narrative arc, drawn as shaded bands on the monthly charts ---- */
+const ERAS = [
+  ["2023-06","2024-12","the quiet years","DC-area contract years"],
+  ["2025-01","2025-07","the hunt","ramps up and peaks — the search ends at the Verkada sign, Jul 9 ’25"],
+  ["2025-09","2026-02","the lull","signed and heads-down; recruiters go quiet"],
+  ["2026-03","2026-09","the AI wave","ex-Verkada visibility + the Bay-Area in-office AI market"],
+];
+function eraSvg(keys, padL, bw, H, padB){
+  let s = "";
+  ERAS.forEach(([a,b,label,desc],ei) => {
+    let i0=-1, i1=-1;
+    keys.forEach((k,i)=>{ if(k>=a && k<=b){ if(i0<0) i0=i; i1=i; } });
+    if(i0<0) return;
+    const months = (+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
+    const n = DATA.filter(x=>{ const m=x.d.slice(0,7); return m>=a && m<=b; }).length;
+    const x0 = padL+i0*bw+2, x1 = padL+(i1+1)*bw-2;
+    s += '<g><title>'+label+' — '+months+' months · '+n+' offers · '+desc+'</title>'+
+      '<rect x="'+x0.toFixed(1)+'" y="6" width="'+(x1-x0).toFixed(1)+'" height="'+(H-padB-6)+'" rx="5" fill="var(--band-'+(ei%2?"b":"a")+')"/>'+
+      '<text class="era" x="'+((x0+x1)/2).toFixed(1)+'" y="20" text-anchor="middle">'+label+'</text></g>';
+  });
+  return s;
+}
+
 /* ---- stat tiles ---- */
 (function(){
   const n = DATA.length;
@@ -457,7 +488,7 @@ function untip(){ TIP.style.opacity = 0; }
     [n, "offers logged", dshort(DATA[0].d)+(DATA[0].d.slice(0,4)!==newest.slice(0,4) ? " ’"+DATA[0].d.slice(2,4) : "")+" → "+dshort(newest)+" · one every "+per+" days"],
     [cos, "companies & clients", (n-gmail)+" LinkedIn · "+gmail+" Gmail pitches"],
     [ai+"/"+n, "pitches are about AI", "it's the whole market, apparently"],
-    [money(lo)+"–"+money(hi), "advertised bases", bases.length+" of "+n+" stated a range"],
+    ["$"+lo+"–"+hi+"K", "advertised bases", bases.length+" of "+n+" stated a range"],
     [pings, "follow-up pings", "endured without folding"],
     [bay+"/"+n, "are in the SF Bay Area", "the rest are unknown or elsewhere"],
   ];
@@ -471,7 +502,7 @@ function untip(){ TIP.style.opacity = 0; }
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = 940, H = 210, padL = 8, padB = 34, top = 30;
+  const W = 940, H = 224, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
@@ -481,11 +512,13 @@ function untip(){ TIP.style.opacity = 0; }
     bars += '<g class="bar"><rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+
             '" rx="4" fill="var(--accent)"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(y-7)+'" text-anchor="middle">'+items.length+'</text>';
-    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k, i===0 || k.endsWith("-01"))+'</text>';
+    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k)+'</text>';
+    if (i===0 || k.endsWith("-01"))
+      labels += '<text class="tick" x="'+(x+w/2)+'" y="'+(H-padB+32)+'" text-anchor="middle">’'+k.slice(2,4)+'</text>';
   });
   $("#cadence").innerHTML =
-    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month">'+
-    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
+    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month, shaded by era">'+
+    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+'</svg>';
   $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
     const items = bins.get(keys[i]);
     g.addEventListener("mousemove", e => tip("<b>"+mlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
@@ -498,11 +531,11 @@ function untip(){ TIP.style.opacity = 0; }
 /* ---- remote vs onsite stacked bars (monthly) ---- */
 (function(){
   const cls = x => { const l = x.loc; if (!l || l === "USA") return "unknown"; return /remote/i.test(l) ? "remote" : "onsite"; };
-  const CATS = [["onsite","var(--c1)"],["remote","var(--c3)"],["unknown","var(--axis)"]];
+  const CATS = [["onsite","var(--c1)"],["remote","var(--c3)"],["unknown","url(#hx)"]];
   const bins = new Map();
   DATA.forEach(x => { const m = x.d.slice(0,7); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = 940, H = 210, padL = 8, padB = 34, top = 30;
+  const W = 940, H = 224, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
@@ -519,11 +552,15 @@ function untip(){ TIP.style.opacity = 0; }
     });
     bars += '<rect x="'+x.toFixed(1)+'" y="'+(H-padB-h).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="transparent"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(H-padB-h-7)+'" text-anchor="middle">'+total+'</text>';
-    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k, i===0 || k.endsWith("-01"))+'</text>';
+    labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+mlab(k)+'</text>';
+    if (i===0 || k.endsWith("-01"))
+      labels += '<text class="tick" x="'+(x+w/2)+'" y="'+(H-padB+32)+'" text-anchor="middle">’'+k.slice(2,4)+'</text>';
   });
   $("#remote").innerHTML =
-    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Stated location policy per month">'+
-    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+bars+labels+'</svg>';
+    '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Stated location policy per month, shaded by era">'+
+    '<defs><pattern id="hx" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'+
+    '<line x1="0" y1="0" x2="0" y2="5" stroke="var(--axis)" stroke-width="1.6"/></pattern></defs>'+
+    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+'</svg>';
   $("#remote").querySelectorAll("g.rbar").forEach(g => {
     const m = g.dataset.m;
     const items = bins.get(m), counts = {};
@@ -532,9 +569,9 @@ function untip(){ TIP.style.opacity = 0; }
     g.addEventListener("mouseleave", untip);
   });
   const tot = {}; DATA.forEach(x => tot[cls(x)] = (tot[cls(x)]||0)+1);
-  $("#remote-note").textContent = "half of all pitches never state a location — the rest went from remote-friendly contracts to Bay-Area in-office AI startups";
+  $("#remote-note").textContent = "half of all pitches never state a location (hatched) — the rest went from remote-friendly contracts to Bay-Area in-office AI startups";
   $("#remote-chips").innerHTML = CATS.map(([c,col]) =>
-    '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+" "+tot[c]+'</span>').join("");
+    '<span class="chip"><span class="dot'+(col==="url(#hx)"?" hatch":"")+'"'+(col==="url(#hx)"?"":' style="background:'+col+'"')+'></span>'+c+" "+tot[c]+'</span>').join("");
 })();
 
 /* ---- fields horizontal bars (count-desc) ---- */
@@ -559,7 +596,7 @@ function untip(){ TIP.style.opacity = 0; }
 (function(){
   const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
   const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
-  const W = 620, rowH = 26, padL = 8, padR = 144, top = 8;
+  const W = 620, rowH = 26, padL = 8, padR = 176, top = 8;
   const H = rows.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
   let marks = "", grid = "";
@@ -568,10 +605,12 @@ function untip(){ TIP.style.opacity = 0; }
             '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
   rows.forEach((r,i) => {
     const y = top + i*rowH + rowH/2;
+    let nm = r.co.replace(/ \(.*\)/,"");
+    if (nm.length > 24) nm = nm.slice(0,23).replace(/[\s\-–\/]+$/,"")+"…";
     marks += '<g class="drow"><line x1="'+xs(r.base[0])+'" y1="'+y+'" x2="'+xs(r.base[1])+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[0])+'" cy="'+y+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>'+
       '<circle cx="'+xs(r.base[1])+'" cy="'+y+'" r="4.5" fill="var(--accent)"/>'+
-      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+r.co.replace(/ \(.*\)/,"").slice(0,20)+'</text></g>';
+      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+nm+'</text></g>';
   });
   $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
     grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+4)+'">$K base</text></svg>';
