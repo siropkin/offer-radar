@@ -100,10 +100,6 @@ figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
 #cadence svg{max-width:940px; margin:0 auto; display:block}
 .cols .panel{display:flex; flex-direction:column}
-#fields{flex:1; display:flex; flex-direction:column; justify-content:space-evenly}
-#fields .frow{margin-bottom:0}
-#comp{flex:1; display:flex; flex-direction:column; justify-content:center}
-#comp svg{margin:0 auto; max-width:100%}
 .frow{display:grid; grid-template-columns:172px 1fr 30px 78px; gap:10px; align-items:center; margin-bottom:9px}
 .frow:last-child{margin-bottom:0}
 .frow .fname{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -126,6 +122,7 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .prow .pnum{grid-column:2; grid-row:2}
   .prow .pnote{grid-column:1 / -1}
 }
+@media (min-width:521px){ .frow,.prow{height:29px; margin-bottom:0} }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
 .chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.55; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
 .chip:hover{border-color:var(--axis)}
@@ -650,8 +647,6 @@ function eraSvg(keys, padL, bw, H, padB){
   }).join("");
   $("#comp").innerHTML = rowsHtml +
     '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div><div class="pnote"></div></div>';
-  const fs = $("#fields");
-  if (fs) fs.style.height = $("#comp").getBoundingClientRect().height + "px";
   $("#comp").querySelectorAll(".prow[data-f]").forEach(el => {
     const rs = byField[el.dataset.f];
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
