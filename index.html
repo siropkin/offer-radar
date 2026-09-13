@@ -210,10 +210,10 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   </section>
   <section>
     <h2>Price tags</h2>
-    <p class="lead">Advertised base-salary ranges, where stated. The healthcare AI scale-up thinks I'm worth <b>twice</b> what the audio one does.</p>
+    <p class="lead">Advertised base by field, where stated. Healthcare AI tops it — on just 2 data points; the dependable payer is <b>AI agents &amp; automation</b> (11 stated ranges, $254K avg). Creative &amp; generative AI brings up the rear.</p>
     <figure class="panel">
-      <h3>Advertised base range</h3>
-      <p class="pl">$K / year · ○ min → ● max · hover a row</p>
+      <h3>Advertised base by field</h3>
+      <p class="pl">$K / year · line = stated span · ● avg midpoint · best first · hover a field for companies</p>
       <div id="comp"></div>
       <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
@@ -597,15 +597,21 @@ function eraSvg(keys, padL, bw, H, padB){
   });
 })();
 
-/* ---- advertised comp dumbbell ---- */
+/* ---- advertised comp by field: stated span + avg midpoint, best first ---- */
 (function(){
-  const rows = DATA.filter(x=>x.base).sort((a,b)=>a.base[0]-b.base[0] || a.base[1]-b.base[1]);
-  const lo = Math.min(...rows.map(r=>r.base[0])), hi = Math.max(...rows.map(r=>r.base[1]));
-  const W = 620, rowH = 26, padL = 8, padR = 176, top = 8;
-  const H = rows.length*rowH + top + 22;
+  const byField = {};
+  DATA.filter(x=>x.base).forEach(r => (byField[r.f] = byField[r.f] || []).push(r));
+  const order = Object.entries(byField).map(([f,rs]) => {
+    const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
+    return {f, rs, n: rs.length,
+      min: Math.min(...rs.map(r=>r.base[0])), max: Math.max(...rs.map(r=>r.base[1])),
+      avg: Math.round(mids.reduce((s,m)=>s+m,0)/mids.length)};
+  }).sort((a,b)=>b.avg-a.avg);
+  const lo = Math.min(...order.map(o=>o.min)), hi = Math.max(...order.map(o=>o.max));
+  const W = 620, rowH = 30, padL = 8, padR = 176, top = 8;
+  const H = order.length*rowH + top + 22;
   const xs = v => padL + (v - lo)/(hi - lo)*(W - padL - padR);
-  const hiRow = rows.reduce((a,r)=> r.base[1] > a.base[1] ? r : a, rows[0]);
-  const mids = rows.map(r=>(r.base[0]+r.base[1])/2).sort((a,b)=>a-b);
+  const mids = DATA.filter(x=>x.base).map(r=>(r.base[0]+r.base[1])/2).sort((a,b)=>a-b);
   const med = mids[Math.floor(mids.length/2)];
   let marks = "", grid = "";
   for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50)
@@ -613,25 +619,26 @@ function eraSvg(keys, padL, bw, H, padB){
             '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
   marks += '<line class="hair" x1="'+xs(med)+'" y1="16" x2="'+xs(med)+'" y2="'+(H-22)+'" stroke-dasharray="3 3"/>'+
     '<text class="tick tick-strong" x="'+xs(med)+'" y="12" text-anchor="middle">median $'+med+'K</text>';
-  rows.forEach((r,i) => {
-    const y = top + i*rowH + rowH/2;
-    let nm = r.co.replace(/ \(.*\)/,"");
-    if (nm.length > 24) nm = nm.slice(0,23).replace(/[\s\-–\/]+$/,"")+"…";
-    const extreme = r === rows[0] ? '<text class="tick tick-strong" style="font-weight:600" x="'+(xs(r.base[1])+10)+'" y="'+(y+3.5)+'">$'+r.base[0]+'K</text>'
-      : r === hiRow ? '<text class="tick tick-strong" style="font-weight:600" x="'+(xs(r.base[0])-10)+'" y="'+(y+3.5)+'" text-anchor="end">$'+r.base[1]+'K</text>' : "";
-    const nmStyle = (r === rows[0] || r === hiRow) ? ' style="font-weight:600; fill:var(--ink)"' : "";
-    marks += '<g class="drow"><line x1="'+xs(r.base[0])+'" y1="'+y+'" x2="'+xs(r.base[1])+'" y2="'+y+'" stroke="var(--accent)" stroke-width="2"/>'+
-      '<circle cx="'+xs(r.base[0])+'" cy="'+y+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>'+
-      '<circle cx="'+xs(r.base[1])+'" cy="'+y+'" r="4.5" fill="var(--accent)"/>'+
-      '<text class="tick tick-strong"'+nmStyle+' x="'+(W-padR+8)+'" y="'+(y+3.5)+'">'+nm+'</text>'+extreme+'</g>';
+  order.forEach((o,i) => {
+    const y = top + i*rowH + rowH/2, col = "var(--"+FIELDS[o.f]+")";
+    const after = xs(o.avg)+10 > W-padR-52;
+    marks += '<g class="drow" data-f="'+o.f+'">'+
+      (o.max>o.min ? '<line x1="'+xs(o.min)+'" y1="'+y+'" x2="'+xs(o.max)+'" y2="'+y+'" stroke="'+col+'" stroke-width="2.5"/>'+
+        '<circle cx="'+xs(o.min)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>'+
+        '<circle cx="'+xs(o.max)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>' : '')+
+      '<circle cx="'+xs(o.avg)+'" cy="'+y+'" r="5" fill="'+col+'"/>'+
+      '<text class="tick tick-strong" style="font-weight:600" x="'+(after ? xs(o.avg)-10 : xs(o.avg)+10)+'" y="'+(y-5)+'"'+(after?' text-anchor="end"':'')+'>$'+o.avg+'K</text>'+
+      '<text class="tick tick-strong" x="'+(W-padR+8)+'" y="'+(y-1)+'">'+o.f+'</text>'+
+      '<text class="tick" x="'+(W-padR+8)+'" y="'+(y+11)+'">n = '+o.n+'</text></g>';
   });
-  $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base salary ranges">'+
+  $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base by field">'+
     grid+marks+'<text class="tick" x="'+(W-padR+8)+'" y="'+(top+4)+'">$K base</text></svg>';
   const fs = $("#fields");
   if (fs) fs.style.height = $("#comp").getBoundingClientRect().height + "px";
-  $("#comp").querySelectorAll("g.drow").forEach((g,i) => {
-    const r = rows[i];
-    g.addEventListener("mousemove", e => tip("<b>"+r.co+"</b><br>"+money(r.base[0])+" – "+money(r.base[1])+" base · "+r.ch, e.clientX, e.clientY));
+  $("#comp").querySelectorAll("g.drow").forEach(g => {
+    const o = order.find(x=>x.f===g.dataset.f);
+    g.addEventListener("mousemove", e => tip("<b>"+o.f+"</b> · avg $"+o.avg+"K · "+o.n+" stated<br>"+
+      o.rs.map(r=>money(r.base[0])+"–"+money(r.base[1])+" "+r.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
   });
 })();
