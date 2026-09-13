@@ -82,9 +82,19 @@ svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
 svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
 svg .era{font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; fill:var(--ink-mute)}
-svg .pfname{font-size:12px; fill:var(--ink-2)}
-svg .pval{font-size:12px; fill:var(--ink); font-variant-numeric:tabular-nums}
-svg .pn{font-size:10px; fill:var(--ink-mute); font-variant-numeric:tabular-nums}
+.prow{display:grid; grid-template-columns:172px 1fr 44px 34px; gap:10px; align-items:center; margin-bottom:9px}
+.prow:last-child{margin-bottom:0}
+.prow .pname{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.prow .ptrack{position:relative; height:20px}
+.prow .pline{position:absolute; top:50%; height:2.5px; transform:translateY(-50%); border-radius:2px; background:var(--pc)}
+.prow .pline::before,.prow .pline::after{content:''; position:absolute; top:50%; width:7px; height:7px; border-radius:50%; background:var(--surface); border:1.5px solid var(--pc); transform:translate(-50%,-50%)}
+.prow .pline::before{left:0}
+.prow .pline::after{left:100%}
+.prow .pdot{position:absolute; top:50%; width:9px; height:9px; border-radius:50%; background:var(--pc); transform:translate(-50%,-50%); z-index:1}
+.prow .pnum{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
+.prow .pnote{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); white-space:nowrap}
+.prow.paxis .ptrack{height:14px}
+.prow .pt{position:absolute; top:0; transform:translateX(-50%); font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); font-variant-numeric:tabular-nums}
 @media (max-width:520px){ svg .era{display:none} }
 figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
@@ -109,6 +119,12 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .frow .fbar{grid-column:1}
   .frow .fcount{grid-column:2; grid-row:2}
   .frow .fseen{grid-column:1 / -1}
+  .prow{grid-template-columns:1fr 44px; gap:4px 10px}
+  .prow .pnote{display:none}
+  .prow .pname{grid-column:1 / -1; text-align:left}
+  .prow .ptrack{grid-column:1}
+  .prow .pnum{grid-column:2; grid-row:2}
+  .prow .pnote{grid-column:1 / -1}
 }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
 .chip{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.55; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:3px 11px; cursor:pointer}
@@ -213,10 +229,10 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   </section>
   <section>
     <h2>Price tags</h2>
-    <p class="lead">Advertised base by field, where stated. Healthcare AI tops it — on just 2 data points; the dependable payer is <b>AI agents &amp; automation</b> (11 stated ranges, $254K avg). Creative &amp; generative AI brings up the rear.</p>
+    <p class="lead">Advertised base by field, where stated. <b>AI agents &amp; automation</b> is the dependable payer ($254K avg over 11 stated ranges); healthcare AI spikes higher on just 2.</p>
     <figure class="panel">
       <h3>Advertised base by field</h3>
-      <p class="pl">$K / year · line = stated span · ● avg midpoint · best first · hover a field for companies</p>
+      <p class="pl">span of stated bases · ● avg · hover a field</p>
       <div id="comp"></div>
       <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
@@ -600,50 +616,49 @@ function eraSvg(keys, padL, bw, H, padB){
   });
 })();
 
-/* ---- advertised comp by field: stated span + avg midpoint, best first ---- */
+/* ---- advertised comp by field: stated span + avg midpoint, Fields order ---- */
 (function(){
+  const counts = {};
+  DATA.forEach(x => counts[x.f] = (counts[x.f]||0)+1);
   const byField = {};
   DATA.filter(x=>x.base).forEach(r => (byField[r.f] = byField[r.f] || []).push(r));
-  const order = Object.entries(byField).map(([f,rs]) => {
+  const lo = Math.min(...DATA.filter(x=>x.base).map(x=>x.base[0]));
+  const hi = Math.max(...DATA.filter(x=>x.base).map(x=>x.base[1]));
+  const pc = v => ((v-lo)/(hi-lo)*100).toFixed(2)+"%";
+  const stops = [];
+  for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50){
+    const p = ((v-lo)/(hi-lo)*100).toFixed(2);
+    stops.push("transparent calc("+p+"% - .5px)","var(--grid) calc("+p+"% - .5px)","var(--grid) calc("+p+"% + .5px)","transparent calc("+p+"% + .5px)");
+  }
+  const gbg = "linear-gradient(90deg,"+stops.join(",")+")";
+  const ticks = [];
+  for(let v = Math.ceil(lo/100)*100; v <= hi; v += 100)
+    ticks.push('<span class="pt" style="left:'+pc(v)+'">'+v+'</span>');
+  const rowsHtml = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b)).filter(f=>byField[f]).map(f => {
+    const rs = byField[f];
+    const min = Math.min(...rs.map(r=>r.base[0])), max = Math.max(...rs.map(r=>r.base[1]));
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
-    return {f, rs, n: rs.length,
-      min: Math.min(...rs.map(r=>r.base[0])), max: Math.max(...rs.map(r=>r.base[1])),
-      avg: Math.round(mids.reduce((s,m)=>s+m,0)/mids.length)};
-  }).sort((a,b)=>b.avg-a.avg);
-  const lo = Math.min(...order.map(o=>o.min)), hi = Math.max(...order.map(o=>o.max));
-  const W = 570, rowH = 30, nameR = 168, trkL = 176, trkR = 448, avgX = 460, nX = 514, top = 16;
-  const H = order.length*rowH + top + 24;
-  const xs = v => trkL + (v - lo)/(hi - lo)*(trkR - trkL);
-  const mids = DATA.filter(x=>x.base).map(r=>(r.base[0]+r.base[1])/2).sort((a,b)=>a-b);
-  const med = mids[Math.floor(mids.length/2)];
-  let marks = "", grid = "";
-  for(let v = Math.ceil(lo/50)*50; v <= hi; v += 50)
-    grid += '<line class="hair" x1="'+xs(v)+'" y1="'+top+'" x2="'+xs(v)+'" y2="'+(H-22)+'"/>'+
-            '<text class="tick" x="'+xs(v)+'" y="'+(H-8)+'" text-anchor="middle">'+v+'</text>';
-  marks += '<line class="hair" x1="'+xs(med)+'" y1="'+top+'" x2="'+xs(med)+'" y2="'+(H-22)+'" stroke-dasharray="3 3"/>'+
-    '<text class="tick tick-strong" x="'+xs(med)+'" y="11" text-anchor="middle">median $'+med+'K</text>';
-  order.forEach((o,i) => {
-    const y = top + i*rowH + rowH/2, col = "var(--"+FIELDS[o.f]+")";
-    let nm = o.f;
-    if (nm.length > 22) nm = nm.slice(0,21).replace(/[\s&\/]+$/,"")+"…";
-    marks += '<g class="drow" data-f="'+o.f+'"><title>'+o.f+'</title>'+
-      (o.max>o.min ? '<line x1="'+xs(o.min)+'" y1="'+y+'" x2="'+xs(o.max)+'" y2="'+y+'" stroke="'+col+'" stroke-width="2.5"/>'+
-        '<circle cx="'+xs(o.min)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>'+
-        '<circle cx="'+xs(o.max)+'" cy="'+y+'" r="3.5" fill="var(--surface)" stroke="'+col+'" stroke-width="1.5"/>' : '')+
-      '<circle cx="'+xs(o.avg)+'" cy="'+y+'" r="5" fill="'+col+'"/>'+
-      '<text class="pfname" x="'+nameR+'" y="'+(y+4)+'" text-anchor="end">'+nm+'</text>'+
-      '<text class="pval" x="'+avgX+'" y="'+(y+4)+'">$'+o.avg+'K</text>'+
-      '<text class="pn" x="'+nX+'" y="'+(y+4)+'">n = '+o.n+'</text></g>';
-  });
-  $("#comp").innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Advertised base by field">'+
-    grid+marks+'<text class="tick" x="'+(W-110)+'" y="11">$K base</text></svg>';
+    const avg = Math.round(mids.reduce((s,m)=>s+m,0)/mids.length);
+    return '<div class="prow" data-f="'+f+'">'+
+      '<div class="pname" title="'+f+'">'+f+'</div>'+
+      '<div class="ptrack" style="--pc:var(--'+FIELDS[f]+'); background:'+gbg+'">'+
+        '<span class="pline" style="left:'+pc(min)+';width:'+((max-min)/(hi-lo)*100).toFixed(2)+'%"></span>'+
+        '<span class="pdot" style="left:'+pc(avg)+'"></span>'+
+      '</div>'+
+      '<div class="pnum">$'+avg+'K</div>'+
+      '<div class="pnote">n='+rs.length+'</div></div>';
+  }).join("");
+  $("#comp").innerHTML = rowsHtml +
+    '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div><div class="pnote"></div></div>';
   const fs = $("#fields");
   if (fs) fs.style.height = $("#comp").getBoundingClientRect().height + "px";
-  $("#comp").querySelectorAll("g.drow").forEach(g => {
-    const o = order.find(x=>x.f===g.dataset.f);
-    g.addEventListener("mousemove", e => tip("<b>"+o.f+"</b> · avg $"+o.avg+"K · "+o.n+" stated<br>"+
-      o.rs.map(r=>money(r.base[0])+"–"+money(r.base[1])+" "+r.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
-    g.addEventListener("mouseleave", untip);
+  $("#comp").querySelectorAll(".prow[data-f]").forEach(el => {
+    const rs = byField[el.dataset.f];
+    const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
+    const avg = Math.round(mids.reduce((s,m)=>s+m,0)/mids.length);
+    el.addEventListener("mousemove", e => tip("<b>"+el.dataset.f+"</b> · avg $"+avg+"K · "+rs.length+" stated<br>"+
+      rs.map(r=>money(r.base[0])+"–"+money(r.base[1])+" "+r.co.replace(/ \(.*\)/,"")).join("<br>"), e.clientX, e.clientY));
+    el.addEventListener("mouseleave", untip);
   });
 })();
 
