@@ -158,7 +158,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
-    <p class="sub">Every pitch that landed since January 2025, logged — all <span id="na"></span> answered, one accepted. Recruiters anonymized; the offers speak for themselves.</p>
+    <p class="sub">Every pitch that landed since June 2023, logged — all <span id="na"></span> answered, one accepted. Recruiters anonymized; the offers speak for themselves.</p>
   </div>
   <div class="stamp">updated 2026-09-12</div>
 </header>
@@ -178,7 +178,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>Remote vs onsite</h2>
-  <p class="lead">Stated office policy per offer, by month of first contact. Remote didn't just fade — it fell off a cliff: 16 stated-remote offers in 2025, exactly one in 2026.</p>
+  <p class="lead">Stated office policy per offer, by month of first contact. Remote didn't just fade — it fell off a cliff: 2 stated-remote offers in 2024, 16 in 2025, exactly one in 2026.</p>
   <figure class="panel">
     <h3>Stated location policy per month</h3>
     <p class="pl">onsite/hybrid · remote · not stated · hover a bar for the split</p>
@@ -212,7 +212,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>The log</h2>
-  <p class="lead">Full record since January 2025 — pitches, referral outreach, and the one offer that ended the hunt. Filter by company, field, or channel.</p>
+  <p class="lead">Full record since June 2023 — pitches, referral outreach, and the one offer that ended the hunt. Filter by company, field, or channel.</p>
   <div class="controls">
     <input type="search" id="q" placeholder="filter… e.g. frontend, agents, gmail" aria-label="Filter offers">
     <select id="fieldsel" aria-label="Filter by field"></select>
@@ -253,6 +253,14 @@ const FIELDS = {
   "Staffing & contract":     "c8",
 };
 const DATA = [
+ {d:"2023-06-19", co:"Unnamed recruiter (part-time)", f:"Staffing & contract", ch:"linkedin", loc:null, off:"'Are you open to part time opportunities?' — vague opener, no role or company; declined next day", base:null, pings:1},
+ {d:"2024-01-11", co:"Talent Ocean", f:"Staffing & contract", ch:"linkedin", loc:null, off:"UI Software Engineers — 'share your CV', no company or comp; declined — recruiter surprised I already live in Annapolis", base:null, pings:1},
+ {d:"2024-03-09", co:"Unnamed client (software-testing platform)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Complex UI components from scratch for a continuous-reliability dev tool — React/Preact/TS/Monaco; same client as the Jan '25 pitch, different agency; no reply", base:null, pings:1},
+ {d:"2024-04-22", co:"Unnamed client (Lead React)", f:"Unnamed client", ch:"linkedin", loc:"Houston TX / Phoenix AZ / Santa Clara CA", off:"Hybrid Lead React Developer — React/Redux/Node; declined same day ('not in the market')", base:null, pings:2},
+ {d:"2024-09-18", co:"United Association (union client)", f:"Staffing & contract", ch:"linkedin", loc:"Annapolis MD", off:"Front-End Developer — Angular/React/TS/Bootstrap, onsite, US citizenship required; declined (H-1B); Oct follow-up pivoted to a Johns Hopkins .NET role", base:null, pings:2},
+ {d:"2024-12-09", co:"Unnamed client (supply-chain SaaS)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"Sr Front End Engineer — ML/AI products powering the biggest supply-chain companies; TS/Angular/Docker, 100% remote, up to $190K + bonus; declined (H-1B)", base:[190,190], pings:2},
+ {d:"2024-12-12", co:"Unnamed client (DoD infrastructure)", f:"Unnamed client", ch:"linkedin", loc:"remote", off:"99%-remote React.JS Developer — $180K flex, DoD infrastructure; interest cooled on TS-clearance + H-1B requirements; 'will keep you in mind'", base:[180,180], pings:3},
+ {d:"2024-12-18", co:"Expression (National Security IT)", f:"Staffing & contract", ch:"linkedin", loc:"Annapolis MD / Ft. Meade MD", off:"Senior Full Stack Engineer — MERN/TS/Python/C#, geospatial apps for DISA; hybrid 3 days, Secret clearance, up to $200K; interested, then clearance/H-1B ended it", base:[200,200], pings:1},
  {d:"2025-01-06", co:"Unnamed AI-security client", f:"AI & physical security", ch:"linkedin", loc:"Falls Church VA", off:"Two full-time remote roles (front end + back end) at an AI-security startup — 'transform the indefensible into the impenetrable'", base:null, pings:4},
  {d:"2025-01-08", co:"Unnamed payments fintech", f:"Big tech & fintech", ch:"linkedin", loc:"McLean VA", off:"Full-stack engineer, Golang-heavy backend + JS/Angular — Series-A2 bank-payments fintech, Visa/Mastercard clients", base:[150, 185], pings:5},
  {d:"2025-01-10", co:"Google", f:"Big tech & fintech", ch:"gmail", loc:null, off:"Senior Software Engineer — special-team sourcer outreach; questionnaire filled, closed out Jan 23", base:null, pings:2},
