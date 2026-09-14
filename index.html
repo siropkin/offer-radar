@@ -203,6 +203,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <p class="pl">first contact date · eras shaded · hover a bar for who pinged</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
+    <div class="chips" id="cadence-chips" style="margin-top:12px"></div>
   </figure>
 </section>
 
@@ -569,6 +570,11 @@ function eraSvg(keys, padL, bw, H, padB){
   });
   const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
   $("#cadence-note").textContent = "peak: "+mlab(peak, true)+" — "+bins.get(peak).length+" offers in one month";
+  $("#cadence-chips").innerHTML = ['linkedin','gmail'].map(c => {
+    const n = DATA.filter(x=>x.ch===c).length;
+    const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
+    return '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+' '+n+'</span>';
+  }).join("");
 })();
 
 /* ---- remote vs onsite stacked bars (monthly) ---- */
