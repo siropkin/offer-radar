@@ -206,10 +206,10 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>Cadence</h2>
-  <p class="lead">First contact per offer, binned by month, shaded into four eras — the quiet DC years, the hunt that ends at the ★, the lull, and the Bay Area AI wave. Hover a bar for who pinged.</p>
+  <p class="lead">First contact per offer, binned by month, shaded into four eras — the quiet DC years, the hunt that ends at the ★, the lull, and the Bay Area AI wave. Hover a bar for the linkedin/gmail split.</p>
   <figure class="panel">
     <h3>Offers per month</h3>
-    <p class="pl">first contact date · eras shaded · hover a bar for who pinged</p>
+    <p class="pl">first contact date · eras shaded · hover a bar for the channel split</p>
     <div id="cadence"></div>
     <figcaption id="cadence-note"></figcaption>
     <div class="chips" id="cadence-chips" style="margin-top:12px"></div>
@@ -240,7 +240,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
   </section>
   <section>
     <h2>Price tags</h2>
-    <p class="lead">Advertised base by field, where stated. <b>AI agents &amp; automation</b> is the dependable payer ($254K avg over 11 stated ranges); healthcare AI spikes higher on just 2.</p>
+    <p class="lead">Advertised base by field, where stated. <b>AI agents &amp; automation</b> is the dependable payer ($266K avg over 10 stated ranges); healthcare AI spikes higher on just 2.</p>
     <figure class="panel">
       <h3>Advertised base by field</h3>
       <p class="pl">span of stated bases · ● avg · hover a field</p>
@@ -487,6 +487,7 @@ const mk = iso => QBIN ? iso.slice(0,4)+"-Q"+Math.ceil(+iso.slice(5,7)/3) : iso.
 let QBIN = matchMedia('(max-width: 700px)').matches;
 const keySpan = k => { if (/-Q/.test(k)) { const q=+k.slice(6), ys=k.slice(0,4); return [ys+"-"+String((q-1)*3+1).padStart(2,"0"), ys+"-"+String(q*3).padStart(2,"0")]; } return [k,k]; };
 const qlab = k => /-Q/.test(k) ? "Q"+k.slice(6) : mlab(k);
+const binlab = k => /-Q/.test(k) ? qlab(k)+" ’"+k.slice(2,4) : mlab(k, true);
 function eraSvg(keys, padL, bw, H, padB){
   let s = "";
   // assign each bar (month or quarter bin) to exactly one era — the era containing the bin's first month; consecutive same-era bars form a band
@@ -572,7 +573,7 @@ function drawCadence(){
   $("#cadence").innerHTML =
     '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month, shaded by era">'+
     '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+
-    (function(){ const gi = keys.indexOf("2025-06"); if (gi >= 0) { const gx = padL + gi*bw + bw/2; return '<text x="'+gx+'" y="14" text-anchor="middle" style="font-size:15px;fill:var(--accent)">★</text>'; } return ""; })()+'</svg>';
+    (function(){ const gi = keys.indexOf(mk("2025-06-15")); if (gi >= 0) { const gx = padL + gi*bw + bw/2; return '<text x="'+gx+'" y="14" text-anchor="middle" style="font-size:15px;fill:var(--accent)">★</text>'; } return ""; })()+'</svg>';
   $("#cadence").querySelectorAll("g.rbar").forEach((g,i) => {
     const items = bins.get(keys[i]);
     const ch = {}; items.forEach(x => ch[x.ch] = (ch[x.ch]||0)+1);
@@ -580,7 +581,7 @@ function drawCadence(){
     g.addEventListener("mouseleave", untip);
   });
   const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
-  $("#cadence-note").textContent = "peak: "+mlab(peak, true)+" — "+bins.get(peak).length+" offers in one month";
+  $("#cadence-note").textContent = "peak: "+binlab(peak)+" — "+bins.get(peak).length+" offers in one "+(/-Q/.test(peak)?"quarter":"month");
   $("#cadence-chips").innerHTML = ['linkedin','gmail'].map(c => {
     const n = DATA.filter(x=>x.ch===c).length;
     const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
@@ -625,7 +626,7 @@ function drawRemote(){
     const m = g.dataset.m;
     const items = bins.get(m), counts = {};
     items.forEach(x => counts[cls(x)] = (counts[cls(x)]||0)+1);
-    g.addEventListener("mousemove", e => tip("<b>"+mlab(m,true)+"</b><br>"+CATS.map(([c]) => c+" "+(counts[c]||0)).join("<br>"), e.clientX, e.clientY));
+    g.addEventListener("mousemove", e => tip("<b>"+binlab(m)+"</b><br>"+CATS.map(([c]) => c+" "+(counts[c]||0)).join("<br>"), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
   });
   const tot = {}; DATA.forEach(x => tot[cls(x)] = (tot[cls(x)]||0)+1);
@@ -639,7 +640,7 @@ drawCadence();
 drawRemote();
 addEventListener("resize", () => {
   const q = matchMedia('(max-width: 700px)').matches;
-  if (q !== QBIN) { QBIN = q; drawCadence(); drawRemote(); }
+  if (q !== QBIN) { QBIN = q; untip(); drawCadence(); drawRemote(); }
 });
 
 /* ---- fields horizontal bars (count-desc) ---- */
@@ -648,8 +649,6 @@ addEventListener("resize", () => {
   DATA.forEach(x => counts[x.f] = (counts[x.f]||0)+1);
   const order = Object.entries(counts).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
   const max = order[0][1];
-  const firsts = {};
-  DATA.forEach(x => { if (!firsts[x.f] || x.d < firsts[x.f]) firsts[x.f] = x.d; });
   $("#fields").innerHTML = order.map(([f,c]) =>
     '<div class="frow"><div class="fname" title="'+f+'">'+f+'</div>'+
     '<div class="fbar" style="width:'+(c/max*100)+'%;background:var(--'+FIELDS[f]+')" data-f="'+f+'"></div>'+
@@ -680,6 +679,7 @@ addEventListener("resize", () => {
   const ticks = [];
   for(let v = Math.ceil(lo/100)*100; v <= hi; v += 100)
     ticks.push('<span class="pt" style="left:'+pc(v)+'">'+v+'</span>');
+  const stats = {};
   const rowsHtml = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b)).map(f => {
     if (!byField[f]) return '<div class="prow"><div class="pname" title="'+f+'">'+f+'</div>'+
       '<div class="ptrack" style="background:var(--grid);opacity:.5"></div>'+
@@ -688,6 +688,7 @@ addEventListener("resize", () => {
     const min = Math.min(...rs.map(r=>r.base[0])), max = Math.max(...rs.map(r=>r.base[1]));
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
     const avg = Math.round(mids.reduce((s,m)=>s+m,0)/mids.length);
+    stats[f] = {min, max, avg, n: rs.length};
     return '<div class="prow" data-f="'+f+'">'+
       '<div class="pname" title="'+f+'">'+f+'</div>'+
       '<div class="ptrack" style="--pc:var(--'+FIELDS[f]+'); background:'+gbg+'">'+
@@ -699,11 +700,8 @@ addEventListener("resize", () => {
   $("#comp").innerHTML = rowsHtml +
     '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div></div>';
   $("#comp").querySelectorAll(".prow[data-f]").forEach(el => {
-    const rs = byField[el.dataset.f];
-    const lo = Math.min(...rs.map(r=>r.base[0])), hi = Math.max(...rs.map(r=>r.base[1]));
-    const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
-    const avg = Math.round(mids.reduce((s,m)=>s+m,0)/mids.length);
-    el.addEventListener("mousemove", e => tip("<b>"+el.dataset.f+"</b> · "+rs.length+" stated<br>min "+money(lo)+" · max "+money(hi)+" · avg "+money(avg), e.clientX, e.clientY));
+    const s = stats[el.dataset.f];
+    el.addEventListener("mousemove", e => tip("<b>"+el.dataset.f+"</b> · "+s.n+" stated<br>min "+money(s.min)+" · max "+money(s.max)+" · avg "+money(s.avg), e.clientX, e.clientY));
     el.addEventListener("mouseleave", untip);
   });
 })();
