@@ -111,17 +111,14 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
   .fd-in{display:inline-flex}
   .tile{padding:13px 14px 12px}
   .tile .v{font-size:25px}
-  .frow{grid-template-columns:1fr 30px; gap:4px 10px}
-  .frow .fname{grid-column:1 / -1; text-align:left}
-  .frow .fbar{grid-column:1}
-  .frow .fcount{grid-column:2; grid-row:2}
-  .frow .fseen{grid-column:1 / -1}
-  .prow{grid-template-columns:1fr 44px; gap:4px 10px}
-  .prow .pnote{display:none}
-  .prow .pname{grid-column:1 / -1; text-align:left}
-  .prow .ptrack{grid-column:1}
-  .prow .pnum{grid-column:2; grid-row:2}
-  .prow .pnote{grid-column:1 / -1}
+  .frow{grid-template-columns:44% 1fr 26px; gap:8px; font-size:11px}
+  .frow .fname{grid-column:1; text-align:left; font-size:11px}
+  .frow .fbar{grid-column:2}
+  .frow .fcount{grid-column:3; grid-row:1; font-size:11px}
+  .prow{grid-template-columns:44% 1fr; gap:8px}
+  .prow .pnum{display:none}
+  .prow .pname{grid-column:1; text-align:left; font-size:11px}
+  .prow .ptrack{grid-column:2}
 }
 @media (min-width:521px){ .frow,.prow{height:29px; margin-bottom:0} }
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
