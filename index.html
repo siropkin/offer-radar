@@ -61,9 +61,6 @@ header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(-
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
 .tile{background:var(--surface); padding:16px 18px 14px}
 .tile .v{font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1}
-#era-strip{display:flex; gap:2px; margin:8px 172px 10px 172px; height:26px; border-radius:6px; overflow:hidden}
-#era-strip div{display:flex; align-items:center; justify-content:center; min-width:0}
-#era-strip span{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.06em; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 @media (min-width:521px){ .tile .v{white-space:nowrap} }
 .tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.08em; text-transform:uppercase}
 .tile .note{font-size:12px; color:var(--ink-2); margin-top:2px}
@@ -231,7 +228,6 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <figure class="panel">
       <h3>Advertised base by field</h3>
       <p class="pl">span of stated bases · ● avg · hover a field</p>
-      <div id="era-strip"></div>
       <div id="comp"></div>
       <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
@@ -650,7 +646,10 @@ function eraSvg(keys, padL, bw, H, padB){
   const ticks = [];
   for(let v = Math.ceil(lo/100)*100; v <= hi; v += 100)
     ticks.push('<span class="pt" style="left:'+pc(v)+'">'+v+'</span>');
-  const rowsHtml = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b)).filter(f=>byField[f]).map(f => {
+  const rowsHtml = Object.keys(counts).sort((a,b)=>counts[b]-counts[a] || a.localeCompare(b)).map(f => {
+    if (!byField[f]) return '<div class="prow"><div class="pname" title="'+f+'">'+f+'</div>'+
+      '<div class="ptrack" style="background:var(--grid);opacity:.5"></div>'+
+      '<div class="pnum" style="color:var(--ink-mute)">—</div></div>';
     const rs = byField[f];
     const min = Math.min(...rs.map(r=>r.base[0])), max = Math.max(...rs.map(r=>r.base[1]));
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
