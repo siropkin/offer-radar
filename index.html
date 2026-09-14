@@ -233,7 +233,6 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
       <h3>Advertised base by field</h3>
       <p class="pl">span of stated bases · ● avg · hover a field</p>
       <div id="comp"></div>
-      <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
   </section>
 </div>
@@ -497,15 +496,6 @@ function eraSvg(keys, padL, bw, H, padB){
   }
   return s;
 }
-    const months = (+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
-    const n = DATA.filter(x=>{ const m=x.d.slice(0,7); return m>=a && m<=b; }).length;
-    const x0 = padL+i0*bw+2, x1 = padL+(i1+1)*bw-2;
-    s += '<g><title>'+label+' — '+months+' months · '+n+' offers · '+desc+'</title>'+
-      '<rect x="'+x0.toFixed(1)+'" y="6" width="'+(x1-x0).toFixed(1)+'" height="'+(H-padB-6)+'" rx="5" fill="var(--band-'+(ei%2?"b":"a")+')"/>'+
-      '<text class="era" x="'+((x0+x1)/2).toFixed(1)+'" y="20" text-anchor="middle">'+label+'</text></g>';
-  });
-  return s;
-}
 
 /* ---- stat tiles ---- */
 (function(){
@@ -550,7 +540,7 @@ function eraSvg(keys, padL, bw, H, padB){
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;, padL = 8, padB = 48, top = 34;
+  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
@@ -584,7 +574,7 @@ function eraSvg(keys, padL, bw, H, padB){
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;, padL = 8, padB = 48, top = 34;
+  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
