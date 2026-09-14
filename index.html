@@ -638,11 +638,7 @@ function eraSvg(keys, padL, bw, H, padB){
     stops.push("transparent calc("+p+"% - .5px)","var(--grid) calc("+p+"% - .5px)","var(--grid) calc("+p+"% + .5px)","transparent calc("+p+"% + .5px)");
   }
   const gbg = "linear-gradient(90deg,"+stops.join(",")+")";
-  const totalM = ERAS.reduce((s,[a,b]) => s + ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1), 0);
-  $("#era-strip").innerHTML = ERAS.map(([a,b,label],ei) => {
-    const months = ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1);
-    return '<div style="flex:'+months+';background:var(--band-'+(ei%2?"b":"a")+')" title="'+mlab(a,true)+' → '+mlab(b,true)+' · '+months+' months"><span>'+label+'</span></div>';
-  }).join("");
+
   const ticks = [];
   for(let v = Math.ceil(lo/100)*100; v <= hi; v += 100)
     ticks.push('<span class="pt" style="left:'+pc(v)+'">'+v+'</span>');
