@@ -575,7 +575,8 @@ function drawCadence(){
     (function(){ const gi = keys.indexOf("2025-06"); if (gi >= 0) { const gx = padL + gi*bw + bw/2; return '<text x="'+gx+'" y="14" text-anchor="middle" style="font-size:15px;fill:var(--accent)">★</text>'; } return ""; })()+'</svg>';
   $("#cadence").querySelectorAll("g.rbar").forEach((g,i) => {
     const items = bins.get(keys[i]);
-    g.addEventListener("mousemove", e => tip("<b>"+qlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.slice(0,5).map(x=>x.co).join("<br>")+(items.length>5 ? "<br>… +"+(items.length-5)+" more" : ""), e.clientX, e.clientY));
+    const ch = {}; items.forEach(x => ch[x.ch] = (ch[x.ch]||0)+1);
+    g.addEventListener("mousemove", e => tip("<b>"+qlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>linkedin "+(ch.linkedin||0)+" · gmail "+(ch.gmail||0), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
   });
   const peak = keys.reduce((a,k)=> bins.get(k).length > bins.get(a).length ? k : a);
@@ -655,8 +656,7 @@ addEventListener("resize", () => {
     '<div class="fcount">'+c+'</div></div>').join("");
   $("#fields").querySelectorAll(".fbar").forEach(el => {
     const f = el.dataset.f;
-    const cos = DATA.filter(x=>x.f===f).map(x=>x.co);
-    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+cos.slice(0,5).join("<br>")+(cos.length>5 ? "<br>… +"+(cos.length-5)+" more" : ""), e.clientX, e.clientY));
+    el.addEventListener("mousemove", e => tip("<b>"+f+"</b><br>"+counts[f]+" offers", e.clientX, e.clientY));
     el.addEventListener("mouseleave", untip);
   });
 })();
@@ -700,10 +700,10 @@ addEventListener("resize", () => {
     '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div></div>';
   $("#comp").querySelectorAll(".prow[data-f]").forEach(el => {
     const rs = byField[el.dataset.f];
+    const lo = Math.min(...rs.map(r=>r.base[0])), hi = Math.max(...rs.map(r=>r.base[1]));
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
     const avg = Math.round(mids.reduce((s,m)=>s+m,0)/mids.length);
-    el.addEventListener("mousemove", e => tip("<b>"+el.dataset.f+"</b> · avg $"+avg+"K · "+rs.length+" stated<br>"+
-      rs.slice(0,5).map(r=>money(r.base[0])+"–"+money(r.base[1])+" "+r.co.replace(/ \(.*\)/,"")).join("<br>")+(rs.length>5 ? "<br>… +"+(rs.length-5)+" more" : ""), e.clientX, e.clientY));
+    el.addEventListener("mousemove", e => tip("<b>"+el.dataset.f+"</b> · "+rs.length+" stated<br>min "+money(lo)+" · max "+money(hi)+" · avg "+money(avg), e.clientX, e.clientY));
     el.addEventListener("mouseleave", untip);
   });
 })();
