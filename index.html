@@ -82,7 +82,7 @@ svg .blab{font-size:11px; font-weight:600; fill:var(--ink)}
 svg .hair{stroke:var(--grid); stroke-width:1}
 svg .base{stroke:var(--axis); stroke-width:1}
 svg .era{font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; fill:var(--ink-mute)}
-.prow{display:grid; grid-template-columns:172px 1fr 44px 34px; gap:10px; align-items:center; margin-bottom:9px}
+.prow{display:grid; grid-template-columns:172px 1fr 56px; gap:10px; align-items:center; margin-bottom:9px}
 .prow:last-child{margin-bottom:0}
 .prow .pname{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .prow .ptrack{position:relative; height:20px}
@@ -92,7 +92,6 @@ svg .era{font-size:10px; font-weight:600; letter-spacing:.09em; text-transform:u
 .prow .pline::after{left:100%}
 .prow .pdot{position:absolute; top:50%; width:9px; height:9px; border-radius:50%; background:var(--pc); transform:translate(-50%,-50%); z-index:1}
 .prow .pnum{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
-.prow .pnote{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); white-space:nowrap}
 .prow.paxis .ptrack{height:14px}
 .prow .pt{position:absolute; top:0; transform:translateX(-50%); font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); font-variant-numeric:tabular-nums}
 @media (max-width:520px){ svg .era{display:none} }
@@ -100,12 +99,11 @@ figure{margin:0}
 figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:10px}
 #cadence svg{max-width:940px; margin:0 auto; display:block}
 .cols .panel{display:flex; flex-direction:column}
-.frow{display:grid; grid-template-columns:172px 1fr 30px 78px; gap:10px; align-items:center; margin-bottom:9px}
+.frow{display:grid; grid-template-columns:172px 1fr 30px; gap:10px; align-items:center; margin-bottom:9px}
 .frow:last-child{margin-bottom:0}
 .frow .fname{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2); text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .frow .fbar{height:20px; border-radius:0 4px 4px 0; min-width:3px}
 .frow .fcount{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums}
-.frow .fseen{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-mute); white-space:nowrap}
 @media (max-width:520px){
   .wrap{padding:28px 16px 56px}
   .tile{padding:13px 14px 12px}
@@ -603,8 +601,7 @@ function eraSvg(keys, padL, bw, H, padB){
   $("#fields").innerHTML = order.map(([f,c]) =>
     '<div class="frow"><div class="fname" title="'+f+'">'+f+'</div>'+
     '<div class="fbar" style="width:'+(c/max*100)+'%;background:var(--'+FIELDS[f]+')" data-f="'+f+'"></div>'+
-    '<div class="fcount">'+c+'</div>'+
-    '<div class="fseen">first '+mlab(firsts[f].slice(0,7), true)+'</div></div>').join("");
+    '<div class="fcount">'+c+'</div></div>').join("");
   $("#fields").querySelectorAll(".fbar").forEach(el => {
     const f = el.dataset.f;
     const cos = DATA.filter(x=>x.f===f).map(x=>x.co);
@@ -642,11 +639,10 @@ function eraSvg(keys, padL, bw, H, padB){
         '<span class="pline" style="left:'+pc(min)+';width:'+((max-min)/(hi-lo)*100).toFixed(2)+'%"></span>'+
         '<span class="pdot" style="left:'+pc(avg)+'"></span>'+
       '</div>'+
-      '<div class="pnum">$'+avg+'K</div>'+
-      '<div class="pnote">n='+rs.length+'</div></div>';
+      '<div class="pnum">$'+avg+'K</div></div>';
   }).join("");
   $("#comp").innerHTML = rowsHtml +
-    '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div><div class="pnote"></div></div>';
+    '<div class="prow paxis"><div class="pname"></div><div class="ptrack" style="background:'+gbg+'">'+ticks.join("")+'</div><div class="pnum"></div></div>';
   $("#comp").querySelectorAll(".prow[data-f]").forEach(el => {
     const rs = byField[el.dataset.f];
     const mids = rs.map(r=>(r.base[0]+r.base[1])/2);
