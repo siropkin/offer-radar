@@ -157,10 +157,16 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 .fd-in i{width:8px; height:8px; border-radius:3px; flex:none}
 @media (max-width:640px){
   .controls{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-  .controls input[type=search]{grid-column:1 / -1; width:100%}
-  .controls select{grid-column:1 / -1; width:100%}
+  .controls input[type=search]{grid-column:1 / -1; width:100%; font-size:16px}
+  .controls select{grid-column:1 / -1; width:100%; font-size:16px}
   .controls .chips{grid-column:1 / -1}
-  table{min-width:520px; font-size:12px}
+  .cols>section{display:block}
+  .cols section{margin-bottom:28px}
+  table{min-width:0; table-layout:fixed; width:100%; font-size:12px}
+  td{vertical-align:top}
+  th:first-child, td:first-child{width:52px; font-size:10.5px; padding:6px 4px}
+  td .off{white-space:normal; overflow:visible; text-overflow:clip; max-width:100%}
+  .yr{display:none}
   th,td{padding:8px 10px}
   td .off{max-width:none}
   th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
