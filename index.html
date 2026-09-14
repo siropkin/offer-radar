@@ -61,6 +61,9 @@ header .stamp{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(-
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:44px}
 .tile{background:var(--surface); padding:16px 18px 14px}
 .tile .v{font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1.1}
+#era-strip{display:flex; gap:2px; margin:8px 172px 10px 172px; height:26px; border-radius:6px; overflow:hidden}
+#era-strip div{display:flex; align-items:center; justify-content:center; min-width:0}
+#era-strip span{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.06em; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 @media (min-width:521px){ .tile .v{white-space:nowrap} }
 .tile .k{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-mute); margin-top:5px; letter-spacing:.08em; text-transform:uppercase}
 .tile .note{font-size:12px; color:var(--ink-2); margin-top:2px}
@@ -191,7 +194,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>Cadence</h2>
-  <p class="lead">First contact per offer, binned by month — the story runs in <b>four eras</b>: the quiet DC contract years, the hunt that ended at the Verkada sign, the lull after it, and the Bay Area AI wave that followed.</p>
+  <p class="lead">First contact per offer, binned by month, shaded into four eras — the quiet DC years, the hunt that ends at the ★, the lull, and the Bay Area AI wave. Hover a bar for who pinged.</p>
   <figure class="panel">
     <h3>Offers per month</h3>
     <p class="pl">first contact date · eras shaded · hover a bar for who pinged</p>
@@ -228,6 +231,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <figure class="panel">
       <h3>Advertised base by field</h3>
       <p class="pl">span of stated bases · ● avg · hover a field</p>
+      <div id="era-strip"></div>
       <div id="comp"></div>
       <figcaption><span id="nbase"></span> of <span id="nall"></span> offers stated a range. Others: equity-talk, "competitive", or just vibes.</figcaption>
     </figure>
@@ -510,6 +514,17 @@ function eraSvg(keys, padL, bw, H, padB){
   ];
   $("#tiles").innerHTML = t.map(([v,k,note]) =>
     '<div class="tile"><div class="v mono">'+v+'</div><div class="k">'+k+'</div><div class="note">'+note+'</div></div>').join("");
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    $("#tiles").querySelectorAll('.v.mono').forEach(el => {
+      const target = parseInt(el.textContent.replace(/[^\d]/g, ''), 10);
+      if (!target || target < 10) return;
+      const t0 = performance.now(), dur = 700;
+      (function tick(now){ const p = Math.min(1, (now - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased).toLocaleString('en-US');
+        if (p < 1) requestAnimationFrame(tick); else el.textContent = target.toLocaleString('en-US');
+      })(t0);
+    });
+  }
 })();
 
 /* ---- monthly cadence bar chart ---- */
@@ -534,7 +549,8 @@ function eraSvg(keys, padL, bw, H, padB){
   });
   $("#cadence").innerHTML =
     '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month, shaded by era">'+
-    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+'</svg>';
+    '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+
+    (function(){ const gi = keys.indexOf("2025-06"); if (gi >= 0) { const gx = padL + gi*bw + bw/2; return '<text x="'+gx+'" y="14" text-anchor="middle" style="font-size:15px;fill:var(--accent)">★</text>'; } return ""; })()+'</svg>';
   $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
     const items = bins.get(keys[i]);
     g.addEventListener("mousemove", e => tip("<b>"+mlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
@@ -625,6 +641,11 @@ function eraSvg(keys, padL, bw, H, padB){
     stops.push("transparent calc("+p+"% - .5px)","var(--grid) calc("+p+"% - .5px)","var(--grid) calc("+p+"% + .5px)","transparent calc("+p+"% + .5px)");
   }
   const gbg = "linear-gradient(90deg,"+stops.join(",")+")";
+  const totalM = ERAS.reduce((s,[a,b]) => s + ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1), 0);
+  $("#era-strip").innerHTML = ERAS.map(([a,b,label],ei) => {
+    const months = ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
+    return '<div style="flex:'+months+';background:var(--band-'+(ei%2?"b":"a")+')" title="'+mlab(a,true)+' → '+mlab(b,true)+' · '+months+' months"><span>'+label+'</span></div>';
+  }).join("");
   const ticks = [];
   for(let v = Math.ceil(lo/100)*100; v <= hi; v += 100)
     ticks.push('<span class="pt" style="left:'+pc(v)+'">'+v+'</span>');
