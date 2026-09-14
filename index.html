@@ -132,6 +132,9 @@ span.chip{cursor:default}
 span.chip:hover{border-color:var(--border)}
 .chip:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 .chip[aria-pressed="true"]{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
+.morebtn{display:block; margin:16px auto 0; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.55; color:var(--ink-2); background:var(--chip-bg); border:1px solid var(--border); border-radius:99px; padding:6px 18px; cursor:pointer}
+.morebtn:hover{border-color:var(--axis); color:var(--ink)}
+.morebtn:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 .chip .dot{width:8px; height:8px; border-radius:50%}
 .chip .dot.hatch{background:repeating-linear-gradient(45deg, var(--axis) 0 1.5px, transparent 1.5px 4.5px)}
 .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
@@ -262,6 +265,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
       <tbody id="rows"></tbody>
     </table>
   </div>
+  <button type="button" id="more" class="morebtn" hidden>show more</button>
 </section>
 
 <footer class="foot">
@@ -480,7 +484,7 @@ const ERAS = [
   ["2026-03","2026-09","the AI wave","ex-Verkada visibility + the Bay-Area in-office AI market"],
 ];
 const mk = iso => QBIN ? iso.slice(0,4)+"-Q"+Math.ceil(+iso.slice(5,7)/3) : iso.slice(0,7);
-const QBIN = matchMedia('(max-width: 700px)').matches;
+let QBIN = matchMedia('(max-width: 700px)').matches;
 const keySpan = k => { if (/-Q/.test(k)) { const q=+k.slice(6), ys=k.slice(0,4); return [ys+"-"+String((q-1)*3+1).padStart(2,"0"), ys+"-"+String(q*3).padStart(2,"0")]; } return [k,k]; };
 const qlab = k => /-Q/.test(k) ? "Q"+k.slice(6) : mlab(k);
 function eraSvg(keys, padL, bw, H, padB){
@@ -542,7 +546,7 @@ function eraSvg(keys, padL, bw, H, padB){
 })();
 
 /* ---- monthly cadence bar chart ---- */
-(function(){
+function drawCadence(){
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
@@ -569,7 +573,7 @@ function eraSvg(keys, padL, bw, H, padB){
     '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Offers per month, shaded by era">'+
     '<line class="base" x1="0" y1="'+(H-padB)+'" x2="'+W+'" y2="'+(H-padB)+'"/>'+eraSvg(keys,padL,bw,H,padB)+bars+labels+
     (function(){ const gi = keys.indexOf("2025-06"); if (gi >= 0) { const gx = padL + gi*bw + bw/2; return '<text x="'+gx+'" y="14" text-anchor="middle" style="font-size:15px;fill:var(--accent)">★</text>'; } return ""; })()+'</svg>';
-  $("#cadence").querySelectorAll("g.bar").forEach((g,i) => {
+  $("#cadence").querySelectorAll("g.rbar").forEach((g,i) => {
     const items = bins.get(keys[i]);
     g.addEventListener("mousemove", e => tip("<b>"+qlab(keys[i])+"</b><br>"+items.length+" offer"+(items.length>1?"s":"")+"<br>"+items.map(x=>x.co).join("<br>"), e.clientX, e.clientY));
     g.addEventListener("mouseleave", untip);
@@ -581,10 +585,10 @@ function eraSvg(keys, padL, bw, H, padB){
     const col = c==='gmail' ? 'var(--c2)' : 'var(--c1)';
     return '<span class="chip"><span class="dot" style="background:'+col+'"></span>'+c+' '+n+'</span>';
   }).join("");
-})();
+}
 
 /* ---- remote vs onsite stacked bars (monthly) ---- */
-(function(){
+function drawRemote(){
   const cls = x => { const l = x.loc; if (!l || l === "USA") return "unknown"; return /remote/i.test(l) ? "remote" : "onsite"; };
   const CATS = [["onsite","var(--c1)"],["remote","var(--c3)"],["unknown","url(#hx)"]];
   const bins = new Map();
@@ -627,7 +631,15 @@ function eraSvg(keys, padL, bw, H, padB){
   $("#remote-note").textContent = "half of all pitches never state a location (hatched) — the rest went from remote-friendly contracts to Bay-Area in-office AI startups";
   $("#remote-chips").innerHTML = CATS.map(([c,col]) =>
     '<span class="chip"><span class="dot'+(col==="url(#hx)"?" hatch":"")+'"'+(col==="url(#hx)"?"":' style="background:'+col+'"')+'></span>'+c+" "+tot[c]+'</span>').join("");
-})();
+}
+
+/* ---- draw time charts now, and again whenever the mobile breakpoint flips ---- */
+drawCadence();
+drawRemote();
+addEventListener("resize", () => {
+  const q = matchMedia('(max-width: 700px)').matches;
+  if (q !== QBIN) { QBIN = q; drawCadence(); drawRemote(); }
+});
 
 /* ---- fields horizontal bars (count-desc) ---- */
 (function(){
@@ -710,15 +722,21 @@ function eraSvg(keys, padL, bw, H, padB){
   $("#chips").querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
     channel = channel === b.dataset.ch ? null : b.dataset.ch;
     $("#chips").querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.ch === channel ? "true" : "false"));
-    draw();
+    refilter();
   }));
+  let limit = 20;
   function draw(){
     const term = q.value.trim().toLowerCase(), field = fs.value;
     const rows = DATA.filter(x =>
       (!channel || x.ch===channel) && (!field || x.f===field) &&
       (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off+" "+(x.loc||"")).toLowerCase().includes(term))
     ).slice().sort((a,b)=>b.d.localeCompare(a.d));
-    tbody.innerHTML = rows.map(x =>
+    const shown = rows.slice(0, limit);
+    const rest = rows.length - shown.length;
+    const btn = $("#more");
+    btn.hidden = rest <= 0;
+    if (rest > 0) btn.textContent = "show "+Math.min(20, rest)+" more · "+rest+" hidden";
+    tbody.innerHTML = shown.map(x =>
       '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+(x.d.slice(0,4)!==newestY ? "<span class=yr> ’"+x.d.slice(2,4)+"</span>" : "")+'</td>'+
       '<td><span class="co">'+x.co+'</span><span class="fd-in"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span><span class="off">'+x.off+'</span></td>'+
       '<td><span class="fd"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span></td>'+
@@ -726,8 +744,10 @@ function eraSvg(keys, padL, bw, H, padB){
       '<td class="num">'+(x.base?money(x.base[0])+'–'+money(x.base[1]):'—')+'</td></tr>').join("") ||
       '<tr><td colspan="5" style="color:var(--ink-mute)">nothing matches</td></tr>';
   }
-  q.addEventListener("input", draw);
-  fs.addEventListener("change", draw);
+  const refilter = () => { limit = 20; draw(); };
+  q.addEventListener("input", refilter);
+  fs.addEventListener("change", refilter);
+  $("#more").addEventListener("click", () => { limit += 20; draw(); });
   draw();
 })();
 </script>
