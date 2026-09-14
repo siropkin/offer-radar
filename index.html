@@ -108,6 +108,8 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
 @media (max-width:520px){
   .wrap{padding:28px 16px 56px}
   th:nth-child(3), td:nth-child(3){display:none}
+  .tblwrap table{table-layout:fixed; width:100%}
+  td .off{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%}
   .fd-in{display:inline-flex}
   .tile{padding:13px 14px 12px}
   .tile .v{font-size:25px}
@@ -548,7 +550,7 @@ function eraSvg(keys, padL, bw, H, padB){
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = 940, H = 224, padL = 8, padB = 48, top = 34;
+  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
@@ -582,7 +584,7 @@ function eraSvg(keys, padL, bw, H, padB){
   const bins = new Map();
   DATA.forEach(x => { const m = mk(x.d); (bins.get(m) || bins.set(m,[]).get(m)).push(x); });
   const keys = [...bins.keys()].sort();
-  const W = 940, H = 224, padL = 8, padB = 48, top = 34;
+  const W = QBIN ? 460 : 940, H = QBIN ? 300 : 224, padL = 8, padB = 48, top = 34;, padL = 8, padB = 48, top = 34;
   const max = Math.max(...bins.values().map(a=>a.length));
   const bw = (W - padL*2) / keys.length;
   let bars = "", labels = "";
