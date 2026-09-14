@@ -516,8 +516,9 @@ function eraSvg(keys, padL, bw, H, padB){
     '<div class="tile"><div class="v mono">'+v+'</div><div class="k">'+k+'</div><div class="note">'+note+'</div></div>').join("");
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     $("#tiles").querySelectorAll('.v.mono').forEach(el => {
-      const target = parseInt(el.textContent.replace(/[^\d]/g, ''), 10);
-      if (!target || target < 10) return;
+      const txt = el.textContent;
+      if (!/^\d+$/.test(txt)) return;
+      const target = +txt;
       const t0 = performance.now(), dur = 700;
       (function tick(now){ const p = Math.min(1, (now - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
         el.textContent = Math.round(target * eased).toLocaleString('en-US');
@@ -643,7 +644,7 @@ function eraSvg(keys, padL, bw, H, padB){
   const gbg = "linear-gradient(90deg,"+stops.join(",")+")";
   const totalM = ERAS.reduce((s,[a,b]) => s + ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1), 0);
   $("#era-strip").innerHTML = ERAS.map(([a,b,label],ei) => {
-    const months = ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
+    const months = ((+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1);
     return '<div style="flex:'+months+';background:var(--band-'+(ei%2?"b":"a")+')" title="'+mlab(a,true)+' → '+mlab(b,true)+' · '+months+' months"><span>'+label+'</span></div>';
   }).join("");
   const ticks = [];
