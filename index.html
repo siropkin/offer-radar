@@ -481,10 +481,23 @@ const keySpan = k => { if (/-Q/.test(k)) { const q=+k.slice(6), ys=k.slice(0,4);
 const qlab = k => /-Q/.test(k) ? "Q"+k.slice(6)+" ’"+k.slice(2,4) : mlab(k);
 function eraSvg(keys, padL, bw, H, padB){
   let s = "";
-  ERAS.forEach(([a,b,label,desc],ei) => {
-    let i0=-1, i1=-1;
-    keys.forEach((k,i)=>{ const [ks,ke] = keySpan(k); if(ks<=b && ke>=a){ if(i0<0) i0=i; i1=i; } });
-    if(i0<0) return;
+  // assign each bar (month or quarter bin) to exactly one era — the era containing the bin's first month; consecutive same-era bars form a band
+  const keyEra = keys.map(k => { const [ks] = keySpan(k); for (let ei = ERAS.length - 1; ei >= 0; ei--) if (ks >= ERAS[ei][0]) return ei; return 0; });
+  let i0 = 0;
+  for (let i = 1; i <= keys.length; i++) {
+    if (i === keys.length || keyEra[i] !== keyEra[i0]) {
+      const [a,b,label,desc] = ERAS[keyEra[i0]];
+      const x0 = padL+i0*bw+2, x1 = padL+i*bw-2;
+      const months = (+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
+      const n = DATA.filter(x=>{ const m=x.d.slice(0,7); return m>=a && m<=b; }).length;
+      s += '<g><title>'+label+' — '+months+' months · '+n+' offers · '+desc+'</title>'+
+        '<rect x="'+x0.toFixed(1)+'" y="6" width="'+(x1-x0).toFixed(1)+'" height="'+(H-padB-6)+'" rx="5" fill="var(--band-'+(keyEra[i0]%2?"b":"a")+')"/>'+
+        '<text class="era" x="'+((x0+x1)/2).toFixed(1)+'" y="20" text-anchor="middle">'+label+'</text></g>';
+      i0 = i;
+    }
+  }
+  return s;
+}
     const months = (+b.slice(0,4)-a.slice(0,4))*12 + (+b.slice(5,7)-a.slice(5,7)) + 1;
     const n = DATA.filter(x=>{ const m=x.d.slice(0,7); return m>=a && m<=b; }).length;
     const x0 = padL+i0*bw+2, x1 = padL+(i1+1)*bw-2;
