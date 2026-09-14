@@ -71,7 +71,7 @@ section>.lead b, header .sub b{color:var(--ink); font-weight:600}
 .cols{display:grid; grid-template-columns:0.72fr 1fr; gap:28px; align-items:stretch}
 .cols>section{display:flex; flex-direction:column}
 .cols>section>.panel{flex:1}
-@media (min-width:821px){ .cols .lead{min-height:44px} }
+@media (min-width:821px){ .cols .lead{min-height:63px} }
 @media (max-width:820px){.cols{grid-template-columns:1fr}}
 .panel{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 20px 14px}
 .panel h3{margin:0 0 4px; font-size:14px; font-weight:600}
@@ -108,6 +108,8 @@ figcaption{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--in
 @media (max-width:520px){
   .wrap{padding:28px 16px 56px}
   th:nth-child(3), td:nth-child(3){display:none}
+  th:first-child, td:first-child{width:52px; font-size:10.5px; padding:6px 4px}
+  .yr{display:none}
   .tblwrap table{table-layout:fixed; width:100%}
   td .off{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%}
   .fd-in{display:inline-flex}
@@ -186,7 +188,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
     <a class="home" href="https://srdkn.com" aria-label="Back to srdkn.com">← srdkn.com</a>
     <p class="eyebrow">Recruiter outreach log</p>
     <h1>Offer Radar</h1>
-    <p class="sub">Every pitch that landed since June 2023, logged — all <span id="na"></span> answered, <b>one accepted</b>. Recruiters anonymized; the offers speak for themselves.</p>
+    <p class="sub">Every pitch that landed in my inbox, logged — all <span id="na"></span> answered, <b>one accepted</b>. Recruiters anonymized; the offers speak for themselves.</p>
   </div>
   <div class="stamp">updated 2026-09-13</div>
 </header>
@@ -239,7 +241,7 @@ td .off{color:var(--ink-2); max-width:44ch; display:block}
 
 <section>
   <h2>The log</h2>
-  <p class="lead">Full record since June 2023 — pitches, referral outreach, and the one offer that ended the hunt. Filter by company, field, or channel.</p>
+  <p class="lead">Full record — pitches, referral outreach, and the one offer that ended the hunt. Filter by company, field, or channel.</p>
   <div class="controls">
     <input type="search" id="q" placeholder="filter… e.g. frontend, agents, gmail" aria-label="Filter offers">
     <select id="fieldsel" aria-label="Filter by field"></select>
@@ -280,7 +282,6 @@ const FIELDS = {
   "Staffing & contract":     "c8",
 };
 const DATA = [
- {d:"2023-06-19", co:"Unnamed recruiter (part-time)", f:"Staffing & contract", ch:"linkedin", loc:null, off:"'Are you open to part time opportunities?' — vague opener, no role or company; declined next day", base:null, pings:1},
  {d:"2024-01-11", co:"Talent Ocean", f:"Staffing & contract", ch:"linkedin", loc:null, off:"UI Software Engineers — 'share your CV', no company or comp; declined — recruiter surprised I already live in Annapolis", base:null, pings:1},
  {d:"2024-03-09", co:"Unnamed client (software-testing platform)", f:"Unnamed client", ch:"linkedin", loc:null, off:"Complex UI components from scratch for a continuous-reliability dev tool — React/Preact/TS/Monaco; same client as the Jan '25 pitch, different agency; no reply", base:null, pings:1},
  {d:"2024-04-22", co:"Unnamed client (Lead React)", f:"Unnamed client", ch:"linkedin", loc:"Houston TX / Phoenix AZ / Santa Clara CA", off:"Hybrid Lead React Developer — React/Redux/Node; declined same day ('not in the market')", base:null, pings:2},
@@ -474,7 +475,7 @@ const ERAS = [
 const mk = iso => QBIN ? iso.slice(0,4)+"-Q"+Math.ceil(+iso.slice(5,7)/3) : iso.slice(0,7);
 const QBIN = matchMedia('(max-width: 700px)').matches;
 const keySpan = k => { if (/-Q/.test(k)) { const q=+k.slice(6), ys=k.slice(0,4); return [ys+"-"+String((q-1)*3+1).padStart(2,"0"), ys+"-"+String(q*3).padStart(2,"0")]; } return [k,k]; };
-const qlab = k => /-Q/.test(k) ? "Q"+k.slice(6)+" ’"+k.slice(2,4) : mlab(k);
+const qlab = k => /-Q/.test(k) ? "Q"+k.slice(6) : mlab(k);
 function eraSvg(keys, padL, bw, H, padB){
   let s = "";
   // assign each bar (month or quarter bin) to exactly one era — the era containing the bin's first month; consecutive same-era bars form a band
@@ -545,11 +546,16 @@ function eraSvg(keys, padL, bw, H, padB){
   keys.forEach((k,i) => {
     const items = bins.get(k), h = items.length / max * (H - top - padB);
     const x = padL + i*bw + 4, y = H - padB - h, w = bw - 8;
-    bars += '<g class="bar"><rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(h,2).toFixed(1)+
-            '" rx="4" fill="var(--accent)"/></g>';
+    let yy = H - padB; const chans = {}; items.forEach(x => chans[x.ch] = (chans[x.ch]||0)+1);
+    bars += '<g class="rbar" data-m="'+k+'">';
+    [["linkedin","var(--c1)"],["gmail","var(--c2)"]].forEach(([c,col]) => {
+      const ch = (chans[c]||0) / items.length * h;
+      if (ch > 0) { yy -= ch; bars += '<rect x="'+x.toFixed(1)+'" y="'+yy.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(ch,2).toFixed(1)+'" fill="'+col+'"/>'; }
+    });
+    bars += '<rect x="'+x.toFixed(1)+'" y="'+(H-padB-h).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="transparent"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(y-7)+'" text-anchor="middle">'+items.length+'</text>';
     labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+qlab(k)+'</text>';
-    if (i===0 || k.endsWith("-01"))
+    if (i===0 || k.endsWith("-01") || /-Q1$/.test(k))
       labels += '<text class="tick" x="'+(x+w/2)+'" y="'+(H-padB+32)+'" text-anchor="middle">’'+k.slice(2,4)+'</text>';
   });
   $("#cadence").innerHTML =
@@ -590,7 +596,7 @@ function eraSvg(keys, padL, bw, H, padB){
     bars += '<rect x="'+x.toFixed(1)+'" y="'+(H-padB-h).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="transparent"/></g>';
     bars += '<text class="blab" x="'+(x+w/2)+'" y="'+(H-padB-h-7)+'" text-anchor="middle">'+total+'</text>';
     labels += '<text class="tick tick-strong" x="'+(x+w/2)+'" y="'+(H-padB+18)+'" text-anchor="middle">'+qlab(k)+'</text>';
-    if (i===0 || k.endsWith("-01"))
+    if (i===0 || k.endsWith("-01") || /-Q1$/.test(k))
       labels += '<text class="tick" x="'+(x+w/2)+'" y="'+(H-padB+32)+'" text-anchor="middle">’'+k.slice(2,4)+'</text>';
   });
   $("#remote").innerHTML =
@@ -701,7 +707,7 @@ function eraSvg(keys, padL, bw, H, padB){
       (!term || (x.co+" "+x.f+" "+x.ch+" "+x.off+" "+(x.loc||"")).toLowerCase().includes(term))
     ).slice().sort((a,b)=>b.d.localeCompare(a.d));
     tbody.innerHTML = rows.map(x =>
-      '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+(x.d.slice(0,4)!==newestY ? " ’"+x.d.slice(2,4) : "")+'</td>'+
+      '<tr><td class="num" title="'+x.d+'">'+dshort(x.d)+(x.d.slice(0,4)!==newestY ? "<span class=yr> ’"+x.d.slice(2,4)+"</span>" : "")+'</td>'+
       '<td><span class="co">'+x.co+'</span><span class="fd-in"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span><span class="off">'+x.off+'</span></td>'+
       '<td><span class="fd"><i style="background:var(--'+FIELDS[x.f]+')"></i>'+x.f+'</span></td>'+
       '<td class="num">'+x.ch+(x.pings>1?' ·'+x.pings+' pings':'')+'</td>'+
