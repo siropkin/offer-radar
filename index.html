@@ -451,8 +451,6 @@ const $ = s => document.querySelector(s);
 $("#na").textContent = DATA.length;
 $("#nof").textContent = DATA.length;
 $("#nfl").textContent = Object.keys(FIELDS).length;
-$("#nbase").textContent = DATA.filter(x=>x.base).length;
-$("#nall").textContent = DATA.length;
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const money = k => "$" + k + "K";
 const dshort = iso => new Date(iso+"T12:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});
