@@ -11,8 +11,10 @@ contains recruiter **names and emails** and must NEVER be copied into this repo.
 
 Data that makes it into `index.html`:
 
-- ✅ company / product, dates, channel ("gmail" | "linkedin"), offer text, salary ranges
-- ❌ recruiter names, emails, agency names, calendar links, anything identifying a person
+- ✅ company / product, dates, channel ("gmail" | "linkedin"), offer text, salary ranges,
+  agency / marketplace names ("via Candidate Labs", "Talor Made Talent") — they identify
+  a company, not a person
+- ❌ recruiter names, emails, calendar links, anything identifying a person
 
 If a recruiter's identity is the interesting part of the story, it stays out.
 "Unnamed client (…)" with a short distinguishing hint is the correct way to log a pitch you can't name — the hint keeps rows distinct in the companies count.
