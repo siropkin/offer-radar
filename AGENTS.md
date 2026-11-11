@@ -1,8 +1,8 @@
 # AGENTS.md — offer-radar
 
 Public dashboard of recruiter pitches received and politely declined.
-Deployed via GitHub Pages → https://siropkin.github.io/offer-radar/ (custom domain
-`radar.srdkn.com` optional; see "Custom domain" below).
+Deployed via GitHub Pages → https://srdkn.com/offer-radar/ (apex custom domain;
+siropkin.github.io/offer-radar/ 301-redirects there — always verify with `curl -sL`).
 
 ## The one hard rule: anonymization
 
@@ -36,8 +36,12 @@ If a recruiter's identity is the interesting part of the story, it stays out.
 6. Verify locally: open `index.html` in a browser, check the tile counts, hover
    the cadence bars, run the filter box. `cli.mjs shot` via chrome-bridge works
    for a quick look.
-7. Commit and push to `master` — GitHub Pages redeploys on push. Wait ~1 min,
-   then confirm the live URL.
+7. Commit and push to `master` — GitHub Pages redeploys on push (legacy build,
+   normally 30–70s; watch `gh api repos/siropkin/offer-radar/pages/builds/latest`).
+   Confirm the live URL with `curl -sL` — plain `curl` gets a 301 stub, not the page.
+   If the build shows `duration: 0` with status `building` for >2 min, it already
+   died on GitHub's side (status lags ~30 min behind reality) — push an empty
+   commit to retrigger instead of waiting.
 
 ## Design rules (keep the page coherent)
 
@@ -55,9 +59,8 @@ If a recruiter's identity is the interesting part of the story, it stays out.
   table scrolls horizontally in its own container. If you add a section, check
   it at 375px wide before pushing.
 
-## Custom domain (optional, not done yet)
+## Custom domain
 
-`rhythm.srdkn.com` is GitHub Pages behind Cloudflare. To do the same here:
-add a `CNAME` file with `radar.srdkn.com`, set the custom domain in
-Settings → Pages, then add the Cloudflare DNS record (user-only step — the
-Cloudflare account is not accessible from here).
+`srdkn.com` (apex) is already configured — siropkin.github.io/offer-radar/
+301s to srdkn.com/offer-radar/. The earlier `radar.srdkn.com` subdomain idea
+is moot while the apex works.
